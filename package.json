@@ -1,0 +1,38 @@
+{
+  "name": "aura_validator",
+  "version": "0.0.1",
+  "description": "Tool to validate and correct integrity of database data.",
+  "main": "index.js",
+  "repository": {},
+  "author": "Ian T Butler <iantbutler@pibrain.io>",
+  "license": "MIT",
+  "dependencies": {
+    "graphql": "^0.8.2",
+    "jsdom": "^9.9.1",
+    "react": "^15.4.2",
+    "react-addons-test-utils": "^15.4.2",
+    "react-bootstrap": "^0.30.7",
+    "react-dom": "^15.4.2",
+    "react-redux": "^5.0.2",
+    "redux": "^3.6.0",
+    "redux-thunk": "^2.2.0",
+    "sequelize": "^3.30.2",
+    "sinon": "^1.17.7"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.22.2",
+    "babel-core": "^6.22.1",
+    "babel-loader": "^6.2.10",
+    "babel-plugin-transform-runtime": "^6.22.0",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-react": "^6.22.0",
+    "babel-preset-react-native": "^1.9.1",
+    "chai": "^3.5.0",
+    "enzyme": "^2.7.0",
+    "mocha": "^3.2.0",
+    "webpack": "^1.14.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  }
+}
