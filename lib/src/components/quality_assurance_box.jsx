@@ -16,7 +16,7 @@ export default class QualityAssuranceBox extends React.Component {
   }
 
   setUpComponents() {
-    return ( 
+    return (
       <div>
         <RestRequestBox value={this.props.active_rest_request} disabled={this.props.in_validation} />
         <DataBox dataField={this.props.active_data_fields}/>

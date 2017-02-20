@@ -1,0 +1,7 @@
+var path = require('path');
+
+module.exports = {
+  'config': path.resolve('./lib/db', 'db_config.js'),
+  'migrations-path': path.resolve('./lib/db', 'migrations'),
+  'models-path': path.resolve('./lib/db', 'models')
+}

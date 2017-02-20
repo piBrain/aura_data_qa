@@ -6,9 +6,9 @@ module.exports = {
     loaders: [
       {
         loader: "babel-loader",
-        // Skip any files outside of your project's `lib/src` directory
+        // Skip any files outside of your project's `lib/` directory
         include: [
-          path.resolve(__dirname, "lib/src"),
+          path.resolve(__dirname, "lib/"),
         ],
         // Only run `.js` and `.jsx` files through Babel
         test: /\.jsx?$/,
