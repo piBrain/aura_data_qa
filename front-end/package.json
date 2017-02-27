@@ -4,7 +4,7 @@
   "description": "Tool to validate and correct integrity of database data.",
   "main": "index.js",
   "repository": {},
-  "author": "Ian T Butler <iantbutler@pibrain.io>",
+  "author": "piBrain, Inc.",
   "license": "MIT",
   "dependencies": {
     "assign-deep": "^0.4.5",
@@ -21,7 +21,6 @@
     "react-redux": "^5.0.2",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
-    "sequelize": "^3.30.2",
     "sinon": "^1.17.7"
   },
   "devDependencies": {

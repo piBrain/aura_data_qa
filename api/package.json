@@ -1,0 +1,43 @@
+{
+  "name": "api",
+  "version": "0.0.1",
+  "description": "API for handling QA data requests.",
+  "main": "src/index.js",
+  "repository": "https://github.com/piBrain/aura_data_qa",
+  "author": "piBrain, Inc.",
+  "license": "MIT",
+  "dependencies": {
+    "babel-core": "^6.22.1",
+    "babel-eslint": "^7.1.1",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-latest": "^6.22.0",
+    "bluebird": "^3.4.7",
+    "body-parser": "^1.16.0",
+    "dotenv": "^4.0.0",
+    "express": "^4.14.1",
+    "graphql": "^0.9.1",
+    "graphql-iso-date": "^3.1.0",
+    "graphql-server-express": "^0.5.2",
+    "graphql-tools": "^0.10.0",
+    "graphql-type-json": "^0.1.4",
+    "lodash": "^4.17.4",
+    "mysql": "^2.13.0",
+    "pg": "^6.1.2",
+    "portscanner": "^2.1.1",
+    "sequelize": "^3.30.2"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^3.15.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.9.0",
+    "mocha": "^3.2.0",
+    "nodemon": "^1.11.0"
+  },
+  "scripts": {
+    "start": "nodemon --require babel-core/register --require babel-polyfill src/index.js",
+    "test": "jest --config jest-config.json"
+  }
+}
