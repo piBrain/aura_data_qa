@@ -3,36 +3,41 @@ import express from 'express'
 import { graphiqlExpress, graphqlExpress } from 'graphql-server-express'
 import { makeExecutableSchema } from 'graphql-tools'
 
+import { config as dotEnvConfig } from 'dotenv'
 import typeDefs from './db/graphql/schema/base_schema'
 import requestDatumResolvers from './db/graphql/resolvers/requestdatum_resolver'
+import db from './db/sequelize/models/db_connection'
 
 import { GraphQLJSON } from 'graphql-type-json'
 import { GraphQLDateTime } from 'graphql-iso-date'
 
+dotEnvConfig()
+
 const qaApp = express()
 
 const schema = makeExecutableSchema({typeDefs: typeDefs, resolvers: requestDatumResolvers})
-console.log('here')
+
 qaApp.use(
-    '/',
+    '/graphql',
     bodyParser.json(),
     graphqlExpress({ schema }),
 )
 
 qaApp.use(
     '/graphiql',
-    graphiqlExpress({ endpointURL: '/graphiql' }),
+    graphiqlExpress({ endpointURL: '/graphql' }),
 )
-
 async function initServer(app) {
-  console.log(`pgstring: ${process.env.pibrainPostgresString}`)
-  await syncDb()
-  const server = app.listen(process.env.port)
+  console.log(`pgstring: ${process.env.DATABASE_URL}`)
+  const server = app.listen(process.env.LISTEN_PORT)
   return new Promise((resolve, reject) => {
     server.on('listening', () => {
-      console.log(`Aura API now listening on port ${process.env.port}`)
+      console.log(`DataQA API now listening on port ${process.env.LISTEN_PORT}`)
       resolve(server)
     })
     server.on('error', err => reject(err))
   })
 }
+
+
+initServer(qaApp)
