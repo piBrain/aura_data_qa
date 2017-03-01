@@ -12,8 +12,12 @@ const update = (_, { id, newUpdatedAt, updatedRequest, updatedData, updatedForm,
   })
 
 }
-const query = (_, { id }) => {
-  db.RequestDatum.findOne({ where: { id } })
+const single_record_query = (_, { id }) => {
+  db.RequestDatum.findById(id)
+}
+
+const records_by_range_query = (_, { id, range }) => {
+  db.RequestDatum.findAll({ offset: id, range: range })
 }
 
 const requestDatumMutations = {
@@ -24,7 +28,8 @@ const requestDatumMutations = {
 
 const requestDatumQueries = {
   Queries: {
-    requestDatum: query,
+    singleRequestDataRecord: single_record_query,
+    requestDatumRecordsByRange: records_by_range_query,
   }
 }
 
