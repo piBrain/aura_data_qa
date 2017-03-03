@@ -40,7 +40,7 @@ const cycle = (state) => {
   return new_state
 }
 
-export const qa_reducer = (state, action) => {
+export const qa_reducer = (state = {}, action) => {
 
   let qa_lookup = {
     TOGGLE_MODE: toggleValidation,
@@ -50,7 +50,9 @@ export const qa_reducer = (state, action) => {
     SET_UP: setUp,
     CYCLE_REQUEST: cycle
   }
-
+  if(typeof qa_lookup[action] == 'undefined') {
+    return state
+  }
   return qa_lookup[action](state)
 }
 

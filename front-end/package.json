@@ -36,6 +36,7 @@
     "babel-preset-react-native": "^1.9.1",
     "chai": "^3.5.0",
     "enzyme": "^2.7.0",
+    "local-web-server": "^1.2.6",
     "mocha": "^3.2.0",
     "webpack": "^1.14.0"
   },

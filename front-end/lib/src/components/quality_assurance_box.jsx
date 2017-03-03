@@ -9,13 +9,14 @@ export default class QualityAssuranceBox extends React.Component {
     this.componentWillMount = this.componentWillMount.bind(this)
   }
   componentWillMount() {
-    this.props.setUp()
+    // this.props.setUp()
   }
   render() {
     return(this.setUpComponents());
   }
 
   setUpComponents() {
+    debugger;
     return (
       <div>
         <RestRequestBox value={this.props.active_rest_request} disabled={this.props.in_validation} />
