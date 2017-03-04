@@ -14,6 +14,8 @@ const currentFiveRecords = gql`
   query CurrentFiveRecords($id: Int!, $range: Int!) {
     requestDatumRecordsByRange(id: $id, range: $range) {
      id
+     parsed_request
+     method
     }
   }
 
@@ -33,6 +35,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
   acceptValid: bindActionCreators( acceptValid, dispatch ),
   rejectInvalid: bindActionCreators( rejectInvalid, dispatch ),
+  dispatch: dispatch
 })
 
 

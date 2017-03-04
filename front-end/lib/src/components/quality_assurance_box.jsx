@@ -16,10 +16,11 @@ export default class QualityAssuranceBox extends React.Component {
   }
 
   setUpComponents() {
+    if(this.props.data.loading) { return (<div>{'LOADING'}</div>) }
     debugger;
     return (
       <div>
-        <RestRequestBox value={this.props.active_rest_request} disabled={this.props.in_validation} />
+        <RestRequestBox value={this.props.data.requestDatumRecordsByRange[0].parsed_request} disabled={this.props.in_validation} />
         <DataBox dataField={this.props.active_data_fields}/>
         <ValidationButton buttonText='Valid'/>
         <ValidationButton buttonText='Invalid'/>

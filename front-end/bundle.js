@@ -21278,7 +21278,7 @@
 	
 	var _taggedTemplateLiteral3 = _interopRequireDefault(_taggedTemplateLiteral2);
 	
-	var _templateObject = (0, _taggedTemplateLiteral3.default)(['\n  query CurrentFiveRecords($id: Int!, $range: Int!) {\n    requestDatumRecordsByRange(id: $id, range: $range) {\n     id\n    }\n  }\n\n'], ['\n  query CurrentFiveRecords($id: Int!, $range: Int!) {\n    requestDatumRecordsByRange(id: $id, range: $range) {\n     id\n    }\n  }\n\n']);
+	var _templateObject = (0, _taggedTemplateLiteral3.default)(['\n  query CurrentFiveRecords($id: Int!, $range: Int!) {\n    requestDatumRecordsByRange(id: $id, range: $range) {\n     id\n     parsed_request\n     method\n    }\n  }\n\n'], ['\n  query CurrentFiveRecords($id: Int!, $range: Int!) {\n    requestDatumRecordsByRange(id: $id, range: $range) {\n     id\n     parsed_request\n     method\n    }\n  }\n\n']);
 	
 	var _quality_assurance_box = __webpack_require__(229);
 	
@@ -21314,7 +21314,8 @@
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 	  return {
 	    acceptValid: (0, _redux.bindActionCreators)(_actions.acceptValid, dispatch),
-	    rejectInvalid: (0, _redux.bindActionCreators)(_actions.rejectInvalid, dispatch)
+	    rejectInvalid: (0, _redux.bindActionCreators)(_actions.rejectInvalid, dispatch),
+	    dispatch: dispatch
 	  };
 	};
 	
@@ -21487,11 +21488,18 @@
 	  }, {
 	    key: 'setUpComponents',
 	    value: function setUpComponents() {
+	      if (this.props.data.loading) {
+	        return _react2.default.createElement(
+	          'div',
+	          null,
+	          'LOADING'
+	        );
+	      }
 	      debugger;
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        _react2.default.createElement(_rest_request_box2.default, { value: this.props.active_rest_request, disabled: this.props.in_validation }),
+	        _react2.default.createElement(_rest_request_box2.default, { value: this.props.data.requestDatumRecordsByRange[0].parsed_request, disabled: this.props.in_validation }),
 	        _react2.default.createElement(_data_box2.default, { dataField: this.props.active_data_fields }),
 	        _react2.default.createElement(_validation_button2.default, { buttonText: 'Valid' }),
 	        _react2.default.createElement(_validation_button2.default, { buttonText: 'Invalid' })

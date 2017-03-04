@@ -38,7 +38,9 @@ qaApp.use(
 //   next()
 // })
 
-async function initServer(app) {
+async function initServer(app, db) {
+  let db_success = await initDB(db)
+
   console.log(`pgstring: ${process.env.DATABASE_URL}`)
   const server = app.listen(process.env.LISTEN_PORT)
   return new Promise((resolve, reject) => {
@@ -50,5 +52,12 @@ async function initServer(app) {
   })
 }
 
+async function initDB(db) {
+  return new Promise((resolve, reject) => {
+    console.log('Initializing DB.')
+    resolve(db.sequelize.sync())
+  })
+}
 
-initServer(qaApp)
+
+initServer(qaApp,db)

@@ -7,8 +7,8 @@ const baseSchema = () => [ `
   scalar DateTime
 
   schema {
-    query: Queries,
-    mutation: Mutations, }
+    query: Query,
+    mutation: Mutation, }
 `]
 
 export default [

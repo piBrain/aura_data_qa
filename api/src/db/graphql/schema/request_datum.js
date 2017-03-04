@@ -4,7 +4,7 @@ export default () => [`type RequestDatum {
 
     updatedAt(newUpdatedAt: DateTime): DateTime!
 
-    parsedRequest(updatedRequest: String): String
+    parsed_request(updatedRequest: String): String
 
     method(updatedMethod: String): String
 

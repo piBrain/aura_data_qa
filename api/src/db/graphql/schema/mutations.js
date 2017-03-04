@@ -1,7 +1,7 @@
 import RequestDatum from './request_datum'
 
 export default () => [
-  `type Mutations {
+  `type Mutation {
     mutateRequestDatum(
         id: Int!,
         newUpdatedAt: DateTime!,

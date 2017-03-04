@@ -13,25 +13,31 @@ const update = (_, { id, newUpdatedAt, updatedRequest, updatedData, updatedForm,
 
 }
 const single_record_query = (_, { id }) => {
-  db.RequestDatum.findById(id)
+  return db.RequestDatum.findById(id)
 }
 
 const records_by_range_query = (_, { id, range }) => {
-  db.RequestDatum.findAll({ offset: id, range: range })
+  return db.RequestDatum.findAll({ offset: id, limit: range })
 }
 
 const requestDatumMutations = {
-  Mutations: {
+  Mutation: {
     mutateRequestDatum: update,
   }
 }
 
 const requestDatumQueries = {
-  Queries: {
+  Query: {
     singleRequestDataRecord: single_record_query,
     requestDatumRecordsByRange: records_by_range_query,
   }
 }
 
+const requestDatum = {
+  RequestDatum: {
+    id: ({id}) => (id),
+  }
+}
 
-export default merge({},requestDatumMutations,requestDatumQueries)
+
+export default merge({}, requestDatumMutations, requestDatumQueries, requestDatum)
