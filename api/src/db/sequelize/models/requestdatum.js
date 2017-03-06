@@ -14,6 +14,7 @@ module.exports = function(sequelize, DataTypes) {
     method: DataTypes.INTEGER,
     data: DataTypes.JSON,
     form: DataTypes.JSON,
+    validated: DataTypes.BOOLEAN,
   }, {
     classMethods: {
       associate: function(models) {

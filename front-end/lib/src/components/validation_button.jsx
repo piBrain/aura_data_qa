@@ -2,9 +2,13 @@ import React from 'react';
 import { Button } from 'react-bootstrap';
 
 export default class ValidationButton extends React.Component {
+  constructor(props) {
+    super(props)
+    this.handleClick = this.handleClick.bind(this)
+  }
   render() {
     return (
-      <Button bsStyle={this.props.bsStyle} bsSize={this.props.bsSize} onClick={this.handleClick} block>
+      <Button style={ this.props.style.topLevelButton } onClick={ this.handleClick } block>
       {this.props.buttonText}
       </Button>
     );
@@ -13,9 +17,4 @@ export default class ValidationButton extends React.Component {
   handleClick(e) {
     this.props.onClick(e)
   }
-
-  handleChange(e) {
-    this.props.onChange(e.target)
-  }
-
 };

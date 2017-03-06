@@ -14,9 +14,9 @@ export default class RestRequestBox extends React.Component {
 
   render() {
     return (
-      <form>
+      <form style={ this.props.style.topLevelForm }>
         <FormGroup className='restDataEntry'>
-          <ControlLabel>'Rest request from database.'</ControlLabel>
+          <ControlLabel style={ this.props.style.controlLabel }>Rest Request:</ControlLabel>
           <FormControl
             type='text'
             value={this.props.value}

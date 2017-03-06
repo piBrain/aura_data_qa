@@ -1,78 +1,41 @@
-import { TOGGLE_MODE, TOGGLE_LOADING, ACCEPT_VALID, REJECT_INVALID, SET_UP, CYCLE_REQUEST } from './actions.js';
+import { TOGGLE_VALIDATION, ACCEPT_VALID, REJECT_INVALID, OPEN_ACCEPT_MODAL, CLOSE_ACCEPT_MODAL} from './actions.js';
 
 import assign from 'assign-deep';
 
-const setUp = (state) => {
-  var changes = {}
-  return ({}, state, change) => {
-
-  }
-}
-
-const toggleValidation = (state) => {
+const toggleValidation = (_, state) => {
   let changes = { in_validation: !state.in_validation }
   return assign({}, state, changes)
 }
 
-const toggleLoading = (state) => {
-  let changes = { loading_records: !state.loading_records }
-  return assign({}, state, changes)
+const accept = (_, state) => {
+  dispatch(CLOSE_ACCEPT_MODAL)
 }
 
-const accept = (state) => {
-
-}
-
-const reject = (state) => {
+const reject = (_, state) => {
 
 }
 
-const cycle = (state) => {
-  let changes = {
-    records: {
-      activeRecord: state.records.allIds.slice(1).shift(),
-      allIds: state.records.allIds.slice(1),
-    }
-  }
+const openAcceptModal = (_, state) => (assign({}, state, { is_accept_open: true }))
 
-  let new_state = assign({}, state, changes)
-  delete new_state.records.byId[state.records.activeRecord]
-  return new_state
+const closeAcceptModal = (_, state) => (assign({}, state, { is_accept_open: false }))
+
+
+const initial_state = {
+  in_validation: true,
+  completed_count: 0,
+  is_accept_open: false,
 }
 
-export const qa_reducer = (state = {}, action) => {
-
+export const qa_reducer = (state = initial_state, action) => {
   let qa_lookup = {
-    TOGGLE_MODE: toggleValidation,
-    TOGGLE_LOADING: toggleLoading,
+    TOGGLE_VALIDATION: toggleValidation,
     ACCEPT_VALID: accept,
     REJECT_INVALID: reject,
-    SET_UP: setUp,
-    CYCLE_REQUEST: cycle
+    OPEN_ACCEPT_MODAL: openAcceptModal,
+    CLOSE_ACCEPT_MODAL: closeAcceptModal
   }
-  if(typeof qa_lookup[action] == 'undefined') {
+  if(typeof qa_lookup[action.type] == 'undefined') {
     return state
   }
-  return qa_lookup[action](state)
+  return qa_lookup[action.type](action, state)
 }
-
-
-
-/*
- * Normalized State Thoughts:
- *
- * {
- * in_validation: t/f,
- * loading_records: t/f,
- * records: {
- *  activeRecord: 1
- *  byId: {
- *   1: {}
- *   2: {}
- *   3: {}
- *  }
- *  allIds: [1,2,3]
- *
- * }
- * }
- */

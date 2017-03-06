@@ -4,7 +4,7 @@ import { Well,ListGroup,ListGroupItem,Label } from 'react-bootstrap';
 export default class DataBox extends React.Component {
   render(props) {
     return (
-      <Well className = 'dataBox'>
+      <Well className = 'dataBox' style={ this.props.style.topLevelWell }>
         <Label>'User Inputs:'</Label>
         <ListGroup>
          {this.enumerateData(this.props)}

@@ -1,37 +1,20 @@
-export const TOGGLE_MODE = 'TOGGLE_MODE'
-export const TOGGLE_LOADING = 'TOGGLE_LOADING'
-export const ACCEPT_VALID = 'ACCEPT_INVALID'
+export const TOGGLE_MODE = 'TOGGLE_VALIDATION'
+
+export const ACCEPT_VALID = 'ACCEPT_VALID'
+
 export const REJECT_INVALID = 'REJECT_INVALID'
-export const CYCLE_REQUEST = 'CYCLE_REQUEST'
-export const FETCH_RECORDS = 'FETCH_RECORDS'
 
-export const toggleMode = () => {
-  return { type: TOGGLE_MODE }
-}
+export const OPEN_ACCEPT_MODAL = 'OPEN_ACCEPT_MODAL'
 
-export const toggleLoading = () => {
-  return { type: TOGGLE_LOADING }
-}
+export const CLOSE_ACCEPT_MODAL = 'CLOSE_ACCEPT_MODAL'
 
-export const fetchRecords = (offset_start) => {
-  return (dispatch) => {
-    dispatch(toggleLoading)
+export const toggleValidation = () => ( { type: TOGGLE_MODE } )
 
-  }
-}
+export const acceptValid = () => ( { type: ACCEPT_VALID } )
 
-export const acceptValid = () => {
-  return { type: ACCEPT_VALID, true }
-}
+export const rejectInvalid = () => ( { type: REJECT_INVALID } )
 
-export const rejectInvalid = () => {
-  return { type: REJECT_INVALID, true }
-}
+export const openAcceptModal = () => ( { type: OPEN_ACCEPT_MODAL } )
 
-export const setUp = (active_request, in_validation = true, request_queue = []) => {
-  return { type: SET_UP, request_queue, active_request, in_validation }
-}
+export const closeAcceptModal = () => ( { type: CLOSE_ACCEPT_MODAL } )
 
-export const cycleRequest = () => {
-  return { type: CYCLE_REQUEST, true }
-}

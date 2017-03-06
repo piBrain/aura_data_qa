@@ -8,11 +8,11 @@ import { bindActionCreators } from 'redux'
 
 import gql from 'graphql-tag'
 
-import { acceptValid, rejectInvalid } from '../../actions'
+import { acceptValid, rejectInvalid, openAcceptModal, closeAcceptModal } from '../../actions'
 
-const currentFiveRecords = gql`
-  query CurrentFiveRecords($id: Int!, $range: Int!) {
-    requestDatumRecordsByRange(id: $id, range: $range) {
+const currentRecord = gql`
+  query CurrentRecord {
+    firstNonValidatedRecord {
      id
      parsed_request
      method
@@ -20,29 +20,26 @@ const currentFiveRecords = gql`
   }
 
 `
-
 const mapStateToProps = (state) => {
-  const active_request = state.qa.records.byId[state.qa.records.activeRecord]
-  // return {
-  //   active_rest_request: active_request.parsed_request,
-  //   active_data_fields: active_request.data,
-  //   in_validation: state.qa.in_validation,
-  //   loading_records: state.qa.loading_records,
-  // }
-  return {}
+  return {
+    in_validation: state.qa.in_validation,
+    completed_count: state.qa.completed_count,
+    is_accept_open: state.qa.is_accept_open
+  }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  acceptValid: bindActionCreators( acceptValid, dispatch ),
-  rejectInvalid: bindActionCreators( rejectInvalid, dispatch ),
-  dispatch: dispatch
-})
+const mapDispatchToProps = (dispatch) => (bindActionCreators({
+      acceptValid,
+      rejectInvalid,
+      openAcceptModal,
+      closeAcceptModal },
+      dispatch))
 
 
 
 export default compose(
     connect( mapStateToProps, mapDispatchToProps ),
-    graphql(currentFiveRecords,{
-      options: ({ activeRecordId }) => ({ variables: { id: 1, range: 5 } }),
+    graphql(currentRecord,{
+      options: ({ activeRecordId }) => ({ variables: { id: 1 } }),
     })
 )(QualityAssuranceBox)

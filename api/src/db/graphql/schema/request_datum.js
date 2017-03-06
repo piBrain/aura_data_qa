@@ -12,4 +12,6 @@ export default () => [`type RequestDatum {
 
     form(updatedForm: JSON): JSON
 
+    validated(updatedValidation: Boolean): Boolean
+
   }`]

@@ -1,7 +1,7 @@
 import db from '../../sequelize/models/db_connection'
 import { merge  } from 'lodash'
 
-const update = (_, { id, newUpdatedAt, updatedRequest, updatedData, updatedForm, updatedMethod, }) => {
+const update = (_, { id, newUpdatedAt, updatedRequest, updatedData, updatedForm, updatedMethod, updatedValidation}) => {
 
   db.RequestDatum.update({}, {
     updated_at: newUpdatedAt,
@@ -9,6 +9,7 @@ const update = (_, { id, newUpdatedAt, updatedRequest, updatedData, updatedForm,
     data: updatedData,
     form: updatedForm,
     method: updatedMethod,
+    validated: updatedValidation,
   })
 
 }
@@ -18,6 +19,10 @@ const single_record_query = (_, { id }) => {
 
 const records_by_range_query = (_, { id, range }) => {
   return db.RequestDatum.findAll({ offset: id, limit: range })
+}
+
+const first_non_validated_record = () => {
+  return db.RequestDatum.findOne({ where: { validated: false  } })
 }
 
 const requestDatumMutations = {
@@ -30,6 +35,7 @@ const requestDatumQueries = {
   Query: {
     singleRequestDataRecord: single_record_query,
     requestDatumRecordsByRange: records_by_range_query,
+    firstNonValidatedRecord: first_non_validated_record,
   }
 }
 

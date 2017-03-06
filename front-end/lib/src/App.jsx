@@ -4,6 +4,10 @@ import ConnectedQualityAssuranceBox from './components/connected_quality_assuran
 
 export default class App extends React.Component {
   render() {
-    return(<ConnectedQualityAssuranceBox/>)
+    return(
+        <div>
+          <ConnectedQualityAssuranceBox/>
+        </div>
+    )
   }
 }

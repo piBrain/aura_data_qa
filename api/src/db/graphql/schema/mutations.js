@@ -8,6 +8,7 @@ export default () => [
         updatedData: JSON,
         updatedForm: JSON,
         updatedMethod: JSON,
+        updatedValidation: Boolean,
     ): RequestDatum
   }`,
   RequestDatum
