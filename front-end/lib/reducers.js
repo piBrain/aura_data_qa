@@ -4,7 +4,7 @@ import {
   OPEN_ACCEPT_MODAL,
   CLOSE_ACCEPT_MODAL,
   TOGGLE_NEW_RECORD,
-  UPDATE_INTERMEDIATE
+  UPDATE_INTERMEDIATE,
 } from './actions.js';
 
 import assign from 'assign-deep';
@@ -27,10 +27,10 @@ const updateIntermediate = (action, state) => {
     intermediateRecord: {
       id: action.id,
       request: action.request,
-      method: action.method,
-      data: action.data,
-      form: action.form,
-      found_at: action.found_at,
+      method: (action.method || state.intermediateRecord.method),
+      data: (action.data || state.intermediateRecord.data),
+      form: (action.form || state.intermediateRecord.form),
+      found_at: (action.found_at || state.intermediateRecord.found_at),
     }
   }
 }
@@ -51,8 +51,18 @@ const initial_state = {
     id: null,
     request: '',
     method: '',
-    data: null,
-    form: null,
+    data: {
+      test1: 'I am a field',
+      test2: 'I am a field',
+      test3: 'I am a field',
+      test4: 'I am a field',
+    },
+    form: {
+      test1: 'I am a field',
+      test2: 'I am a field',
+      test3: 'I am a field',
+      test4: 'I am a field',
+    },
     found_at: null,
   }
 }
@@ -64,7 +74,7 @@ export const qa_reducer = (state = initial_state, action) => {
     OPEN_ACCEPT_MODAL: openAcceptModal,
     CLOSE_ACCEPT_MODAL: closeAcceptModal,
     TOGGLE_NEW_RECORD: toggleNewRecord,
-    UPDATE_INTERMEDIATE: updateIntermediate
+    UPDATE_INTERMEDIATE: updateIntermediate,
   }
   if(typeof qa_lookup[action.type] == 'undefined') {
     return state

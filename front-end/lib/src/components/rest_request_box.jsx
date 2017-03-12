@@ -5,23 +5,35 @@ export default class RestRequestBox extends React.Component {
 
   constructor(props) {
     super(props)
-    this.handleChange = this.handleChange.bind(this);
+    this.handleRequestChange = this.handleRequestChange.bind(this);
+    this.handleMethodChange = this.handleMethodChange.bind(this);
   }
 
-  handleChange(e) {
-    this.props.onChange(e.target);
+  handleRequestChange(e) {
+    this.props.onRequestChange(e.target);
+  }
+
+  handleMethodChange(e) {
+    this.props.onMethodChange(e.target)
   }
 
   render() {
     return (
       <form style={ this.props.style.topLevelForm }>
         <FormGroup className='restDataEntry'>
+          <ControlLabel style={ this.props.style.controlLabel }>Method:</ControlLabel>
+          <FormControl
+            type='text'
+            value={this.props.methodValue}
+            disabled={this.props.disabled}
+            onChange={this.handleMethodChange}
+          />
           <ControlLabel style={ this.props.style.controlLabel }>Rest Request:</ControlLabel>
           <FormControl
             type='text'
-            value={this.props.value}
+            value={this.props.requestValue}
             disabled={this.props.disabled}
-            onChange={this.handleChange}
+            onChange={this.handleRequestChange}
           />
         </FormGroup>
       </form>

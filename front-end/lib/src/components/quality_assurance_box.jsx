@@ -9,7 +9,9 @@ export default class QualityAssuranceBox extends React.Component {
     super(props)
     this.componentWillMount = this.componentWillMount.bind(this)
     this.acceptModal = this.acceptModal.bind(this)
+    this.defineRequestBox = this.defineRequestBox.bind(this)
     this.acceptValidation = this.acceptValidation.bind(this)
+    this.updateParsedRequest = this.updateParsedRequest.bind(this)
   }
   componentWillMount() {
     // this.props.setUp()
@@ -21,8 +23,8 @@ export default class QualityAssuranceBox extends React.Component {
   restRequestBoxStyle() {
     return {
       topLevelForm: {
-        width: '50%',
-        marginLeft: '25%',
+        width: '80%',
+        marginLeft: '7.5%',
       },
       controlLabel: {
       },
@@ -32,8 +34,8 @@ export default class QualityAssuranceBox extends React.Component {
   dataBoxStyle() {
     return {
       topLevelWell: {
-        width: '50%',
-        marginLeft: '25%',
+        width: '80%',
+        marginLeft: '7.5%',
       },
     }
   }
@@ -50,7 +52,7 @@ export default class QualityAssuranceBox extends React.Component {
   qaEntryStyle() {
     return {
       topLevelDiv: {
-        marginTop: '15%',
+        marginTop: '2.5%',
         flex: '1 0 0',
         order: 1,
       }
@@ -114,14 +116,46 @@ export default class QualityAssuranceBox extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if(!nextProps.CurrentRecord.loading && nextProps.isNewRecord) {
-      let { id, parsed_request, method, data, form } = nextProps.CurrentRecord.firstNonValidatedRecord
+      let { id, parsed_request, method, data, form, found_at } = nextProps.CurrentRecord.firstNonValidatedRecord
       this.props.toggleNewRecord()
-      this.props.updateIntermediate(id, parsed_request, method, data, form)
+      this.props.updateIntermediate( id, parsed_request, found_at, method, data, form)
     }
   }
 
   shouldComponentUpdate(nextProps, _) {
     return true
+  }
+
+  updateParsedRequest(target) {
+    let newParsedRequestValue = target.value
+    let intermediateRecord = this.props.intermediateRecord
+    this.props.updateIntermediate(
+        intermediateRecord.id,
+        newParsedRequestValue,
+    )
+  }
+
+  defineRequestBox() {
+    let inValidation = this.props.in_validation
+    let intermediateRecord = this.props.intermediateRecord
+    return (
+      <RestRequestBox
+        onRequestChange={this.updateParsedRequest}
+        onMethodChange={this.updateMethod}
+        methodValue={ intermediateRecord.method }
+        requestValue={ intermediateRecord.request }
+        disabled={ inValidation } 
+        style={ this.restRequestBoxStyle() }
+      />
+    )
+  }
+
+  updateData(target, key) {
+
+  }
+
+  updateForm(target, key) {
+
   }
 
   setUpComponents() {
@@ -132,13 +166,14 @@ export default class QualityAssuranceBox extends React.Component {
       <div style={this.wrapperStyle()}>
         <div style={ this.qaEntryStyle().topLevelDiv }>
           { this.acceptModal() }
-          <RestRequestBox value={ intermediateRecord.request } disabled={ inValidation } style={ this.restRequestBoxStyle() } />
-          <DataBox dataField={intermediateRecord.activeData} style={ this.dataBoxStyle() }/>
+          { this.defineRequestBox() }
+          <DataBox labelName='Request Inputs' disabled={inValidation} dataField={intermediateRecord.data} style={ this.dataBoxStyle() }/>
+          <DataBox labelName='Request Form Fields' disabled={inValidation} dataField={intermediateRecord.form} style={ this.dataBoxStyle() }/>
           <ValidationButton buttonText='Valid' style={ this.validationButtonStyle() } onClick={ this.props.openAcceptModal }/>
           <ValidationButton buttonText='Invalid' style={ this.validationButtonStyle() } onClick={ this.props.rejectInvalid }/>
         </div>
         <div style={ this.webpageBoxStyle().topLevelDiv }>
-          <iframe src={intermediateRecord.found_at || 'http://www.bing.com'} style={this.webpageBoxStyle().iFrame}></iframe>
+          <iframe src={intermediateRecord.found_at}  style={this.webpageBoxStyle().iFrame}></iframe>
         </div>
       </div>
     );

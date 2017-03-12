@@ -11,7 +11,7 @@ module.exports = function(sequelize, DataTypes) {
     created_at: DataTypes.TIME,
     updated_at: DataTypes.TIME,
     parsed_request: DataTypes.STRING,
-    method: DataTypes.INTEGER,
+    method: DataTypes.STRING,
     data: DataTypes.JSON,
     form: DataTypes.JSON,
     validated: DataTypes.BOOLEAN,

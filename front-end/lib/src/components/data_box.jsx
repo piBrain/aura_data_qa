@@ -1,11 +1,17 @@
 import React from 'react';
-import { Well,ListGroup,ListGroupItem,Label } from 'react-bootstrap';
+import { Well,ListGroup,ListGroupItem,Label,FormControl } from 'react-bootstrap';
 
 export default class DataBox extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.enumerateData = this.enumerateData.bind(this)
+    this.buildFormControl = this.buildFormControl.bind(this)
+  } 
   render(props) {
     return (
       <Well className = 'dataBox' style={ this.props.style.topLevelWell }>
-        <Label>'User Inputs:'</Label>
+        <Label>{`${this.props.labelName}:`}</Label>
         <ListGroup>
          {this.enumerateData(this.props)}
         </ListGroup>
@@ -14,14 +20,31 @@ export default class DataBox extends React.Component {
   }
 
   handleChange(e) {
-    this.props.onChange(e.target);
+    let key = e.target.id
+    this.props.onDataChange(e.target, key);
   }
 
-  enumerateData(props) {
+  enumerateData() {
     let fields = [];
-    for(let key in props.dataField) {
-      fields.push(<ListGroupItem>key:props.dataField[key]</ListGroupItem>)
+    for(let key in this.props.dataField) {
+      fields.push(
+        <ListGroupItem key={`${key}-LGI`}>
+          {key}:  {this.buildFormControl(key)}
+        </ListGroupItem>
+      )
     }
     return fields
+  }
+
+  buildFormControl(key) {
+    return (
+        <FormControl 
+          type='text'
+          key={key} 
+          value={this.props.dataField[key]}
+          disabled={this.props.disabled}
+          onChange={this.handleChange}
+        />
+    )
   }
 };
