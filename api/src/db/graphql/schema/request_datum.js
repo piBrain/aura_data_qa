@@ -14,4 +14,6 @@ export default () => [`type RequestDatum {
 
     validated(updatedValidation: Boolean): Boolean
 
+    found_at: String
+
   }`]

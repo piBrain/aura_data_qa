@@ -4,11 +4,12 @@ export default () => [
   `type Mutation {
     mutateRequestDatum(
         id: Int!,
-        newUpdatedAt: DateTime!,
+        newUpdatedAt: DateTime,
+        updatedRequest: String!
         updatedData: JSON,
         updatedForm: JSON,
-        updatedMethod: JSON,
-        updatedValidation: Boolean,
+        updatedMethod: String,
+        updatedValidation: Boolean!,
     ): RequestDatum
   }`,
   RequestDatum

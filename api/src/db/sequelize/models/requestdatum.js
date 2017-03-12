@@ -15,6 +15,7 @@ module.exports = function(sequelize, DataTypes) {
     data: DataTypes.JSON,
     form: DataTypes.JSON,
     validated: DataTypes.BOOLEAN,
+    found_at: DataTypes.STRING,
   }, {
     classMethods: {
       associate: function(models) {

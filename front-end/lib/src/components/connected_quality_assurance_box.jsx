@@ -8,7 +8,7 @@ import { bindActionCreators } from 'redux'
 
 import gql from 'graphql-tag'
 
-import { acceptValid, rejectInvalid, openAcceptModal, closeAcceptModal } from '../../actions'
+import { rejectInvalid, openAcceptModal, closeAcceptModal, toggleNewRecord, updateIntermediate } from '../../actions'
 
 const currentRecord = gql`
   query CurrentRecord {
@@ -16,30 +16,70 @@ const currentRecord = gql`
      id
      parsed_request
      method
+     found_at
     }
   }
 
+`
+
+const updateRecord = gql`
+  mutation UpdateRecord(
+    $id: Int!,
+    $updatedRequest: String!,
+    $updatedMethod: String,
+    $updatedValidation: Boolean!,
+    $updatedData: JSON)
+    {
+      mutateRequestDatum(
+        id: $id,
+        updatedValidation: $updatedValidation,
+        updatedData: $updatedData,
+        updatedMethod: $updatedMethod,
+        updatedRequest: $updatedRequest) {
+          id
+        }
+    }
 `
 const mapStateToProps = (state) => {
   return {
     in_validation: state.qa.in_validation,
     completed_count: state.qa.completed_count,
-    is_accept_open: state.qa.is_accept_open
+    is_accept_open: state.qa.is_accept_open,
+    isNewRecord: state.qa.isNewRecord,
+    intermediateRecord: state.qa.intermediateRecord,
   }
 }
 
-const mapDispatchToProps = (dispatch) => (bindActionCreators({
-      acceptValid,
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(
+    {
       rejectInvalid,
       openAcceptModal,
-      closeAcceptModal },
-      dispatch))
+      closeAcceptModal,
+      toggleNewRecord,
+      updateIntermediate
+    },
+    dispatch
+  )
+}
 
 
+const fetchNonValidatedRecord = graphql(currentRecord, {
+  fetchPolicy: 'network-only',
+  name: 'CurrentRecord',
+})
+
+const persistChangesAndValidate = graphql(updateRecord, {
+  props: ({ mutate }) => ({
+    persistChangesAndValidate: ( { id, request, method, data, form } ) => {
+      return mutate({ variables: { id, updatedRequest: request, updatedValidation: true } })
+    }
+  }),
+  // refetchQueries: ['CurrentRecord'],
+})
 
 export default compose(
     connect( mapStateToProps, mapDispatchToProps ),
-    graphql(currentRecord,{
-      options: ({ activeRecordId }) => ({ variables: { id: 1 } }),
-    })
+    fetchNonValidatedRecord,
+    persistChangesAndValidate
 )(QualityAssuranceBox)

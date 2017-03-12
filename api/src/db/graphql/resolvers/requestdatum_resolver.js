@@ -1,16 +1,16 @@
 import db from '../../sequelize/models/db_connection'
 import { merge  } from 'lodash'
 
-const update = (_, { id, newUpdatedAt, updatedRequest, updatedData, updatedForm, updatedMethod, updatedValidation}) => {
-
-  db.RequestDatum.update({}, {
+const update = (_, { id, newUpdatedAt=(new Date()), updatedRequest, updatedData, updatedForm, updatedMethod, updatedValidation}) => {
+  console.log(newUpdatedAt)
+  db.RequestDatum.update({
     updated_at: newUpdatedAt,
     parsed_request: updatedRequest,
     data: updatedData,
     form: updatedForm,
     method: updatedMethod,
     validated: updatedValidation,
-  })
+  }, { where: { id: id } })
 
 }
 const single_record_query = (_, { id }) => {
