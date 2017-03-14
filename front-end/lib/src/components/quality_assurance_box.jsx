@@ -12,6 +12,8 @@ export default class QualityAssuranceBox extends React.Component {
     this.defineRequestBox = this.defineRequestBox.bind(this)
     this.acceptValidation = this.acceptValidation.bind(this)
     this.updateParsedRequest = this.updateParsedRequest.bind(this)
+    this.updateData = this.updateData.bind(this)
+    this.updateForm = this.updateForm.bind(this)
   }
   componentWillMount() {
     // this.props.setUp()
@@ -25,6 +27,8 @@ export default class QualityAssuranceBox extends React.Component {
       topLevelForm: {
         width: '80%',
         marginLeft: '7.5%',
+        marginBottom: '0',
+        flex: '1 0 0',
       },
       controlLabel: {
       },
@@ -36,15 +40,23 @@ export default class QualityAssuranceBox extends React.Component {
       topLevelWell: {
         width: '80%',
         marginLeft: '7.5%',
+        flex: '1.4 0 0',
+        overflowY: 'scroll',
       },
+      listGroup: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+      }
     }
   }
 
   validationButtonStyle() {
     return  {
       topLevelButton: {
-        width: '50%',
-        marginLeft: '25%'
+        width: '80%',
+        marginLeft: '7.5%',
+        flex: '0.1 0 0',
       },
     }
   }
@@ -52,9 +64,14 @@ export default class QualityAssuranceBox extends React.Component {
   qaEntryStyle() {
     return {
       topLevelDiv: {
-        marginTop: '2.5%',
+        marginTop: '1%',
         flex: '1 0 0',
+        height: '90%',
         order: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+        alignIterms: 'center',
       }
     }
   }
@@ -77,10 +94,49 @@ export default class QualityAssuranceBox extends React.Component {
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'center',
-      alignIterms: 'space-around',
+      alignItems: 'space-around',
       width: '100%',
       height: '100%',
     }
+  }
+
+  addDataFieldStyle(props) {
+    let visibility = props.in_validation ? 'hidden' : 'visible'
+    return  {
+      topLevelButton: {
+        margin: '0',
+        flex: '0.95 0 0',
+        fontSize: '0.65em',
+        order: 1,
+        visibility,
+      },
+    }
+  }
+
+  addFormFieldStyle(props) {
+    let visibility = props.in_validation ? 'hidden' : 'visible'
+    return  {
+      topLevelButton: {
+        margin: '0',
+        flex: '0.95 0 0',
+        fontSize: '0.65em',
+        order: 2,
+        visibility
+      },
+    }
+  }
+
+  addFieldWrapperStyle() {
+    return {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'space-around',
+      width: '80%',
+      height: '5%',
+      marginLeft: '7.5%',
+      marginBottom: '1%',
+    } 
   }
 
   acceptValidation() {
@@ -151,11 +207,23 @@ export default class QualityAssuranceBox extends React.Component {
   }
 
   updateData(target, key) {
+    let intermediateRecord = this.props.intermediateRecord
+    let update = target.value
+    let data = { ...intermediateRecord.data }
 
+    data[key] = update
+
+    this.props.updateIntermediate( intermediateRecord.id, intermediateRecord.request, null, null, data )
   }
 
   updateForm(target, key) {
+    let intermediateRecord = this.props.intermediateRecord
+    let update = target.value
+    let form = { ...intermediateRecord.form }
 
+    form[key] = update
+
+    this.props.updateIntermediate( intermediateRecord.id, intermediateRecord.request, null, null, null, form )
   }
 
   setUpComponents() {
@@ -164,11 +232,15 @@ export default class QualityAssuranceBox extends React.Component {
     let inValidation = this.props.in_validation
     return (
       <div style={this.wrapperStyle()}>
-        <div style={ this.qaEntryStyle().topLevelDiv }>
+        <div style={ this.qaEntryStyle().topLevelDiv } className='qaBox'>
           { this.acceptModal() }
           { this.defineRequestBox() }
-          <DataBox labelName='Request Inputs' disabled={inValidation} dataField={intermediateRecord.data} style={ this.dataBoxStyle() }/>
-          <DataBox labelName='Request Form Fields' disabled={inValidation} dataField={intermediateRecord.form} style={ this.dataBoxStyle() }/>
+          <DataBox onChange={this.updateData} labelName='Request Inputs' disabled={inValidation} dataField={intermediateRecord.data} style={ this.dataBoxStyle() }/>
+          <DataBox onChange={this.updateForm} labelName='Request Form Fields' disabled={inValidation} dataField={intermediateRecord.form} style={ this.dataBoxStyle() }/>
+          <div style={this.addFieldWrapperStyle()} >
+            <ValidationButton buttonText='Add Data Field' style={ this.addDataFieldStyle(this.props) } onClick={ this.addDataField }/>
+            <ValidationButton buttonText='Add Form Field' style={ this.addFormFieldStyle(this.props) } onClick={ this.addFormField }/>
+          </div>
           <ValidationButton buttonText='Valid' style={ this.validationButtonStyle() } onClick={ this.props.openAcceptModal }/>
           <ValidationButton buttonText='Invalid' style={ this.validationButtonStyle() } onClick={ this.props.rejectInvalid }/>
         </div>

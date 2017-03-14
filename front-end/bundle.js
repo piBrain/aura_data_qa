@@ -23761,18 +23761,8 @@
 	    id: null,
 	    request: '',
 	    method: '',
-	    data: {
-	      test1: 'I am a field',
-	      test2: 'I am a field',
-	      test3: 'I am a field',
-	      test4: 'I am a field'
-	    },
-	    form: {
-	      test1: 'I am a field',
-	      test2: 'I am a field',
-	      test3: 'I am a field',
-	      test4: 'I am a field'
-	    },
+	    data: {},
+	    form: {},
 	    found_at: null
 	  }
 	};
@@ -24006,31 +23996,41 @@
 	        ),
 	        _react2.default.createElement(
 	          _reactBootstrap.ListGroup,
-	          null,
+	          { style: this.props.style.listGroup },
 	          this.enumerateData(this.props)
 	        )
 	      );
 	    }
 	  }, {
 	    key: 'handleChange',
-	    value: function handleChange(e) {
-	      var key = e.target.id;
-	      this.props.onDataChange(e.target, key);
+	    value: function handleChange(key, e) {
+	      this.props.onChange(e.target, key);
 	    }
 	  }, {
 	    key: 'enumerateData',
 	    value: function enumerateData() {
 	      var fields = [];
+	      var order = 0;
 	      for (var key in this.props.dataField) {
+	        order++;
+	
 	        fields.push(_react2.default.createElement(
 	          _reactBootstrap.ListGroupItem,
-	          { key: key + '-LGI' },
+	          { key: key + '-LGI', style: this.listElementStyle(order) },
 	          key,
 	          ':  ',
 	          this.buildFormControl(key)
 	        ));
 	      }
 	      return fields;
+	    }
+	  }, {
+	    key: 'listElementStyle',
+	    value: function listElementStyle(order) {
+	      return {
+	        order: order,
+	        flex: '1 0 0'
+	      };
 	    }
 	  }, {
 	    key: 'buildFormControl',
@@ -24040,7 +24040,7 @@
 	        key: key,
 	        value: this.props.dataField[key],
 	        disabled: this.props.disabled,
-	        onChange: this.handleChange
+	        onChange: this.handleChange.bind(this, key)
 	      });
 	    }
 	  }]);
@@ -24059,6 +24059,10 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _extends2 = __webpack_require__(5);
+	
+	var _extends3 = _interopRequireDefault(_extends2);
 	
 	var _getPrototypeOf = __webpack_require__(55);
 	
@@ -24115,6 +24119,8 @@
 	    _this.defineRequestBox = _this.defineRequestBox.bind(_this);
 	    _this.acceptValidation = _this.acceptValidation.bind(_this);
 	    _this.updateParsedRequest = _this.updateParsedRequest.bind(_this);
+	    _this.updateData = _this.updateData.bind(_this);
+	    _this.updateForm = _this.updateForm.bind(_this);
 	    return _this;
 	  }
 	
@@ -24134,7 +24140,9 @@
 	      return {
 	        topLevelForm: {
 	          width: '80%',
-	          marginLeft: '7.5%'
+	          marginLeft: '7.5%',
+	          marginBottom: '0',
+	          flex: '1 0 0'
 	        },
 	        controlLabel: {}
 	      };
@@ -24145,7 +24153,14 @@
 	      return {
 	        topLevelWell: {
 	          width: '80%',
-	          marginLeft: '7.5%'
+	          marginLeft: '7.5%',
+	          flex: '1.4 0 0',
+	          overflowY: 'scroll'
+	        },
+	        listGroup: {
+	          display: 'flex',
+	          flexDirection: 'column',
+	          justifyContent: 'space-around'
 	        }
 	      };
 	    }
@@ -24154,8 +24169,9 @@
 	    value: function validationButtonStyle() {
 	      return {
 	        topLevelButton: {
-	          width: '50%',
-	          marginLeft: '25%'
+	          width: '80%',
+	          marginLeft: '7.5%',
+	          flex: '0.1 0 0'
 	        }
 	      };
 	    }
@@ -24164,9 +24180,14 @@
 	    value: function qaEntryStyle() {
 	      return {
 	        topLevelDiv: {
-	          marginTop: '2.5%',
+	          marginTop: '1%',
 	          flex: '1 0 0',
-	          order: 1
+	          height: '90%',
+	          order: 1,
+	          display: 'flex',
+	          flexDirection: 'column',
+	          justifyContent: 'space-around',
+	          alignIterms: 'center'
 	        }
 	      };
 	    }
@@ -24191,9 +24212,51 @@
 	        display: 'flex',
 	        flexDirection: 'row',
 	        justifyContent: 'center',
-	        alignIterms: 'space-around',
+	        alignItems: 'space-around',
 	        width: '100%',
 	        height: '100%'
+	      };
+	    }
+	  }, {
+	    key: 'addDataFieldStyle',
+	    value: function addDataFieldStyle(props) {
+	      var visibility = props.in_validation ? 'hidden' : 'visible';
+	      return {
+	        topLevelButton: {
+	          margin: '0',
+	          flex: '0.95 0 0',
+	          fontSize: '0.65em',
+	          order: 1,
+	          visibility: visibility
+	        }
+	      };
+	    }
+	  }, {
+	    key: 'addFormFieldStyle',
+	    value: function addFormFieldStyle(props) {
+	      var visibility = props.in_validation ? 'hidden' : 'visible';
+	      return {
+	        topLevelButton: {
+	          margin: '0',
+	          flex: '0.95 0 0',
+	          fontSize: '0.65em',
+	          order: 2,
+	          visibility: visibility
+	        }
+	      };
+	    }
+	  }, {
+	    key: 'addFieldWrapperStyle',
+	    value: function addFieldWrapperStyle() {
+	      return {
+	        display: 'flex',
+	        flexDirection: 'row',
+	        justifyContent: 'center',
+	        alignItems: 'space-around',
+	        width: '80%',
+	        height: '5%',
+	        marginLeft: '7.5%',
+	        marginBottom: '1%'
 	      };
 	    }
 	  }, {
@@ -24284,10 +24347,26 @@
 	    }
 	  }, {
 	    key: 'updateData',
-	    value: function updateData(target, key) {}
+	    value: function updateData(target, key) {
+	      var intermediateRecord = this.props.intermediateRecord;
+	      var update = target.value;
+	      var data = (0, _extends3.default)({}, intermediateRecord.data);
+	
+	      data[key] = update;
+	
+	      this.props.updateIntermediate(intermediateRecord.id, intermediateRecord.request, null, null, data);
+	    }
 	  }, {
 	    key: 'updateForm',
-	    value: function updateForm(target, key) {}
+	    value: function updateForm(target, key) {
+	      var intermediateRecord = this.props.intermediateRecord;
+	      var update = target.value;
+	      var form = (0, _extends3.default)({}, intermediateRecord.form);
+	
+	      form[key] = update;
+	
+	      this.props.updateIntermediate(intermediateRecord.id, intermediateRecord.request, null, null, null, form);
+	    }
 	  }, {
 	    key: 'setUpComponents',
 	    value: function setUpComponents() {
@@ -24305,11 +24384,17 @@
 	        { style: this.wrapperStyle() },
 	        _react2.default.createElement(
 	          'div',
-	          { style: this.qaEntryStyle().topLevelDiv },
+	          { style: this.qaEntryStyle().topLevelDiv, className: 'qaBox' },
 	          this.acceptModal(),
 	          this.defineRequestBox(),
-	          _react2.default.createElement(_data_box2.default, { labelName: 'Request Inputs', disabled: inValidation, dataField: intermediateRecord.data, style: this.dataBoxStyle() }),
-	          _react2.default.createElement(_data_box2.default, { labelName: 'Request Form Fields', disabled: inValidation, dataField: intermediateRecord.form, style: this.dataBoxStyle() }),
+	          _react2.default.createElement(_data_box2.default, { onChange: this.updateData, labelName: 'Request Inputs', disabled: inValidation, dataField: intermediateRecord.data, style: this.dataBoxStyle() }),
+	          _react2.default.createElement(_data_box2.default, { onChange: this.updateForm, labelName: 'Request Form Fields', disabled: inValidation, dataField: intermediateRecord.form, style: this.dataBoxStyle() }),
+	          _react2.default.createElement(
+	            'div',
+	            { style: this.addFieldWrapperStyle() },
+	            _react2.default.createElement(_validation_button2.default, { buttonText: 'Add Data Field', style: this.addDataFieldStyle(this.props), onClick: this.addDataField }),
+	            _react2.default.createElement(_validation_button2.default, { buttonText: 'Add Form Field', style: this.addFormFieldStyle(this.props), onClick: this.addFormField })
+	          ),
 	          _react2.default.createElement(_validation_button2.default, { buttonText: 'Valid', style: this.validationButtonStyle(), onClick: this.props.openAcceptModal }),
 	          _react2.default.createElement(_validation_button2.default, { buttonText: 'Invalid', style: this.validationButtonStyle(), onClick: this.props.rejectInvalid })
 	        ),

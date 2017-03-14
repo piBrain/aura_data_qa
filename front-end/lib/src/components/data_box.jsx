@@ -12,28 +12,37 @@ export default class DataBox extends React.Component {
     return (
       <Well className = 'dataBox' style={ this.props.style.topLevelWell }>
         <Label>{`${this.props.labelName}:`}</Label>
-        <ListGroup>
+        <ListGroup style={ this.props.style.listGroup }>
          {this.enumerateData(this.props)}
         </ListGroup>
       </Well>
     );
   }
 
-  handleChange(e) {
-    let key = e.target.id
-    this.props.onDataChange(e.target, key);
+  handleChange(key, e) {
+    this.props.onChange(e.target, key);
   }
 
   enumerateData() {
-    let fields = [];
+    let fields = []
+    let order = 0
     for(let key in this.props.dataField) {
+      order++
+
       fields.push(
-        <ListGroupItem key={`${key}-LGI`}>
+        <ListGroupItem key={`${key}-LGI`} style={this.listElementStyle(order)}>
           {key}:  {this.buildFormControl(key)}
         </ListGroupItem>
       )
     }
     return fields
+  }
+
+  listElementStyle(order) {
+    return {
+      order,
+      flex: '1 0 0',
+    }
   }
 
   buildFormControl(key) {
@@ -43,7 +52,7 @@ export default class DataBox extends React.Component {
           key={key} 
           value={this.props.dataField[key]}
           disabled={this.props.disabled}
-          onChange={this.handleChange}
+          onChange={this.handleChange.bind(this, key)}
         />
     )
   }

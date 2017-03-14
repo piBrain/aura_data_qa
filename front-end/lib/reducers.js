@@ -51,18 +51,8 @@ const initial_state = {
     id: null,
     request: '',
     method: '',
-    data: {
-      test1: 'I am a field',
-      test2: 'I am a field',
-      test3: 'I am a field',
-      test4: 'I am a field',
-    },
-    form: {
-      test1: 'I am a field',
-      test2: 'I am a field',
-      test3: 'I am a field',
-      test4: 'I am a field',
-    },
+    data: {},
+    form: {},
     found_at: null,
   }
 }
