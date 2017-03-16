@@ -12,6 +12,10 @@ export default () => [`type RequestDatum {
 
     form(updatedForm: JSON): JSON
 
+    commandEx1(updatedCommandEx1: String): String!
+
+    commandEx2(updatedCommandEx2: String): String!
+
     validated(updatedValidation: Boolean): Boolean
 
     found_at: String

@@ -9,6 +9,8 @@ export default () => [
         updatedData: JSON,
         updatedForm: JSON,
         updatedMethod: String,
+        updatedCommandEx1: String!,
+        updatedCommandEx2: String!,
         updatedValidation: Boolean!,
     ): RequestDatum
   }`,

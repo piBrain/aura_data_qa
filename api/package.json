@@ -17,6 +17,7 @@
     "cors": "^2.8.1",
     "dotenv": "^4.0.0",
     "express": "^4.14.1",
+    "google-auth-library": "^0.10.0",
     "graphql": "^0.9.1",
     "graphql-iso-date": "^3.1.0",
     "graphql-server-express": "^0.5.2",
@@ -24,6 +25,7 @@
     "graphql-type-json": "^0.1.4",
     "lodash": "^4.17.4",
     "mysql": "^2.13.0",
+    "passport-google-oauth": "^1.0.0",
     "pg": "^6.1.2",
     "portscanner": "^2.1.1",
     "sequelize": "^3.30.2"
@@ -38,7 +40,9 @@
     "nodemon": "^1.11.0"
   },
   "scripts": {
-    "start": "nodemon --require babel-core/register --require babel-polyfill src/index.js",
+    "debug": "nodemon --inspect --require babel-core/register --require babel-polyfill src/index.js",
+    "start-mon": "nodemon --require babel-core/register --require babel-polyfill src/index.js",
+    "start": "node --require babel-core/register --require babel-polyfill src/index.js",
     "test": "jest --config jest-config.json"
   }
 }

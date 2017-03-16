@@ -1,8 +1,20 @@
-import React from 'react';
+import React from 'react'
 import Modal from 'react-modal'
-import RestRequestBox from './rest_request_box';
-import DataBox from './data_box';
-import ValidationButton from './validation_button';
+import RestRequestBox from './rest_request_box' 
+import DataBox from './data_box'
+import ValidationButton from './validation_button'
+import uuid from 'uuid'
+import {
+  restRequestBoxStyle,
+  dataBoxStyle,
+  validationButtonStyle,
+  qaEntryStyle,
+  webpageBoxStyle,
+  wrapperStyle,
+  addFieldStyle,
+  addFieldWrapperStyle
+} from '../qa_styles'
+
 
 export default class QualityAssuranceBox extends React.Component {
   constructor(props) {
@@ -14,6 +26,9 @@ export default class QualityAssuranceBox extends React.Component {
     this.updateParsedRequest = this.updateParsedRequest.bind(this)
     this.updateData = this.updateData.bind(this)
     this.updateForm = this.updateForm.bind(this)
+    this.updateMethod = this.updateMethod.bind(this)
+    this.updateCommandEx1 = this.updateCommandEx1.bind(this)
+    this.updateCommandEx2 = this.updateCommandEx2.bind(this)
   }
   componentWillMount() {
     // this.props.setUp()
@@ -22,122 +37,6 @@ export default class QualityAssuranceBox extends React.Component {
     return(this.setUpComponents());
   }
 
-  restRequestBoxStyle() {
-    return {
-      topLevelForm: {
-        width: '80%',
-        marginLeft: '7.5%',
-        marginBottom: '0',
-        flex: '1 0 0',
-      },
-      controlLabel: {
-      },
-    }
-  }
-
-  dataBoxStyle() {
-    return {
-      topLevelWell: {
-        width: '80%',
-        marginLeft: '7.5%',
-        flex: '1.4 0 0',
-        overflowY: 'scroll',
-      },
-      listGroup: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-around',
-      }
-    }
-  }
-
-  validationButtonStyle() {
-    return  {
-      topLevelButton: {
-        width: '80%',
-        marginLeft: '7.5%',
-        flex: '0.1 0 0',
-      },
-    }
-  }
-
-  qaEntryStyle() {
-    return {
-      topLevelDiv: {
-        marginTop: '1%',
-        flex: '1 0 0',
-        height: '90%',
-        order: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-around',
-        alignIterms: 'center',
-      }
-    }
-  }
-
-  webpageBoxStyle() {
-    return {
-      topLevelDiv: {
-        flex: '1 0 0',
-        order: 2,
-      },
-      iFrame: {
-        width: '100%',
-        height: '100%',
-      },
-    }
-  }
-
-  wrapperStyle() {
-    return {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'space-around',
-      width: '100%',
-      height: '100%',
-    }
-  }
-
-  addDataFieldStyle(props) {
-    let visibility = props.in_validation ? 'hidden' : 'visible'
-    return  {
-      topLevelButton: {
-        margin: '0',
-        flex: '0.95 0 0',
-        fontSize: '0.65em',
-        order: 1,
-        visibility,
-      },
-    }
-  }
-
-  addFormFieldStyle(props) {
-    let visibility = props.in_validation ? 'hidden' : 'visible'
-    return  {
-      topLevelButton: {
-        margin: '0',
-        flex: '0.95 0 0',
-        fontSize: '0.65em',
-        order: 2,
-        visibility
-      },
-    }
-  }
-
-  addFieldWrapperStyle() {
-    return {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'space-around',
-      width: '80%',
-      height: '5%',
-      marginLeft: '7.5%',
-      marginBottom: '1%',
-    } 
-  }
 
   acceptValidation() {
     this.props.persistChangesAndValidate(this.props.intermediateRecord)
@@ -148,11 +47,11 @@ export default class QualityAssuranceBox extends React.Component {
             this.props.closeAcceptModal()
           })
           .catch((err) => {
-            debugger
+            console.log(err)
           })
       })
       .catch((err) => {
-        debugger
+        console.log(err)
       })
   }
 
@@ -171,10 +70,22 @@ export default class QualityAssuranceBox extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if(nextProps.token == false) {
+      this.props.CurrentRecord.refetch()
+        .then(() => {
+          this.props.toggleNewRecord()
+          this.props.pushHistory('/login')
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+      return
+    }
     if(!nextProps.CurrentRecord.loading && nextProps.isNewRecord) {
-      let { id, parsed_request, method, data, form, found_at } = nextProps.CurrentRecord.firstNonValidatedRecord
+      let { id, parsed_request, method, data, form, found_at, commandEx1, commandEx2 } = nextProps.CurrentRecord.firstNonValidatedRecord
       this.props.toggleNewRecord()
-      this.props.updateIntermediate( id, parsed_request, found_at, method, data, form)
+      this.props.updateIntermediate( id, parsed_request, found_at, method, data, form, commandEx1, commandEx2)
+      window.open(found_at, '_blank', 'location=0')
     }
   }
 
@@ -191,6 +102,46 @@ export default class QualityAssuranceBox extends React.Component {
     )
   }
 
+  updateMethod(target) {
+    let newParsedRequestValue = target.value
+    let intermediateRecord = this.props.intermediateRecord
+    this.props.updateIntermediate(
+      intermediateRecord.id,
+      intermediateRecord.request,
+      null,
+      target.value
+    )
+  }
+
+  updateCommandEx1(target) {
+    let newParsedRequestValue = target.value
+    let intermediateRecord = this.props.intermediateRecord
+    this.props.updateIntermediate(
+        intermediateRecord.id,
+        intermediateRecord.request,
+        null,
+        null,
+        null,
+        null,
+        target.value
+    )
+  }
+
+  updateCommandEx2(target) {
+    let newParsedRequestValue = target.value
+    let intermediateRecord = this.props.intermediateRecord
+    this.props.updateIntermediate(
+        intermediateRecord.id,
+        intermediateRecord.request,
+        null,
+        null,
+        null,
+        null,
+        null,
+        target.value
+    )
+  }
+
   defineRequestBox() {
     let inValidation = this.props.in_validation
     let intermediateRecord = this.props.intermediateRecord
@@ -198,10 +149,14 @@ export default class QualityAssuranceBox extends React.Component {
       <RestRequestBox
         onRequestChange={this.updateParsedRequest}
         onMethodChange={this.updateMethod}
+        onCommandEx1Change={this.updateCommandEx1}
+        onCommandEx2Change={this.updateCommandEx2}
         methodValue={ intermediateRecord.method }
         requestValue={ intermediateRecord.request }
+        commandEx1Value={ intermediateRecord.commandEx1 }
+        commandEx2Value={ intermediateRecord.commandEx2 }
         disabled={ inValidation } 
-        style={ this.restRequestBoxStyle() }
+        style={ restRequestBoxStyle }
       />
     )
   }
@@ -226,26 +181,41 @@ export default class QualityAssuranceBox extends React.Component {
     this.props.updateIntermediate( intermediateRecord.id, intermediateRecord.request, null, null, null, form )
   }
 
+  addDataField() {
+    let intermediateRecord = this.props.intermediateRecord
+    let updatedData = {
+      ...intermediateRecord.data,
+      [`place-holder-${uuid()}`]: ''
+    }
+    this.props.updateIntermediate( intermediateRecord.id, intermediateRecord.request, null, null, updatedData, null )
+  }
+
+  addFormField() {
+    let intermediateRecord = this.props.intermediateRecord
+    let updatedForm = {
+      ...intermediateRecord.form,
+      [`place-holder-${uuid()}`]: ''
+    }
+    this.props.updateIntermediate( intermediateRecord.id, intermediateRecord.request, null, null, null, updatedForm )
+  }
+
   setUpComponents() {
     if(this.props.CurrentRecord.loading) { return (<div>{'LOADING'}</div>) }
     let intermediateRecord = this.props.intermediateRecord
     let inValidation = this.props.in_validation
     return (
-      <div style={this.wrapperStyle()}>
-        <div style={ this.qaEntryStyle().topLevelDiv } className='qaBox'>
+      <div style={wrapperStyle}>
+        <div style={ qaEntryStyle.topLevelDiv } className='qaBox'>
           { this.acceptModal() }
           { this.defineRequestBox() }
-          <DataBox onChange={this.updateData} labelName='Request Inputs' disabled={inValidation} dataField={intermediateRecord.data} style={ this.dataBoxStyle() }/>
-          <DataBox onChange={this.updateForm} labelName='Request Form Fields' disabled={inValidation} dataField={intermediateRecord.form} style={ this.dataBoxStyle() }/>
-          <div style={this.addFieldWrapperStyle()} >
-            <ValidationButton buttonText='Add Data Field' style={ this.addDataFieldStyle(this.props) } onClick={ this.addDataField }/>
-            <ValidationButton buttonText='Add Form Field' style={ this.addFormFieldStyle(this.props) } onClick={ this.addFormField }/>
+          <DataBox onChange={this.updateData} labelName='Request Inputs' disabled={inValidation} dataField={intermediateRecord.data} style={ dataBoxStyle }/>
+          <DataBox onChange={this.updateForm} labelName='Request Form Fields' disabled={inValidation} dataField={intermediateRecord.form} style={ dataBoxStyle }/>
+          <div style={addFieldWrapperStyle} >
+            <ValidationButton buttonText='Add Data Field' style={ addFieldStyle(this.props) } onClick={ this.addDataField.bind(this) }/>
+            <ValidationButton buttonText='Add Form Field' style={ addFieldStyle(this.props) } onClick={ this.addFormField.bind(this) }/>
           </div>
-          <ValidationButton buttonText='Valid' style={ this.validationButtonStyle() } onClick={ this.props.openAcceptModal }/>
-          <ValidationButton buttonText='Invalid' style={ this.validationButtonStyle() } onClick={ this.props.rejectInvalid }/>
-        </div>
-        <div style={ this.webpageBoxStyle().topLevelDiv }>
-          <iframe src={intermediateRecord.found_at}  style={this.webpageBoxStyle().iFrame}></iframe>
+          <ValidationButton buttonText='Valid' style={ validationButtonStyle } onClick={ this.props.openAcceptModal }/>
+          <ValidationButton buttonText='Invalid' style={ validationButtonStyle } onClick={ this.props.rejectInvalid }/>
         </div>
       </div>
     );

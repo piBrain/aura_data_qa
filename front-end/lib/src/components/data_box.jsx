@@ -19,8 +19,12 @@ export default class DataBox extends React.Component {
     );
   }
 
-  handleChange(key, e) {
+  handleFieldChange(key, e) {
     this.props.onChange(e.target, key);
+  }
+
+  handleFieldNameChange(key, e){
+    this.props.onKeyChange(e.target, key)
   }
 
   enumerateData() {
@@ -31,7 +35,7 @@ export default class DataBox extends React.Component {
 
       fields.push(
         <ListGroupItem key={`${key}-LGI`} style={this.listElementStyle(order)}>
-          {key}:  {this.buildFormControl(key)}
+          {this.buildFormControl(key, this.handleFieldNameChange, key)}----{this.buildFormControl(key,this.handleFieldChange,this.props.dataField[key])}
         </ListGroupItem>
       )
     }
@@ -45,14 +49,13 @@ export default class DataBox extends React.Component {
     }
   }
 
-  buildFormControl(key) {
+  buildFormControl(key, changeFunction, value) {
     return (
         <FormControl 
           type='text'
-          key={key} 
-          value={this.props.dataField[key]}
+          value={value}
           disabled={this.props.disabled}
-          onChange={this.handleChange.bind(this, key)}
+          onChange={changeFunction.bind(this, key)}
         />
     )
   }

@@ -2,15 +2,14 @@ import bodyParser from 'body-parser'
 import express from 'express'
 import { graphiqlExpress, graphqlExpress } from 'graphql-server-express'
 import { makeExecutableSchema } from 'graphql-tools'
-
 import { config as dotEnvConfig } from 'dotenv'
 import typeDefs from './db/graphql/schema/base_schema'
 import requestDatumResolvers from './db/graphql/resolvers/requestdatum_resolver'
 import db from './db/sequelize/models/db_connection'
-
-import { GraphQLJSON } from 'graphql-type-json'
-import { GraphQLDateTime } from 'graphql-iso-date'
 import cors from 'cors'
+import GoogleAuth from 'google-auth-library'
+import crypto from 'crypto'
+import base64url from 'base64url'
 
 dotEnvConfig()
 
@@ -18,12 +17,24 @@ const qaApp = express()
 
 const schema = makeExecutableSchema({typeDefs: typeDefs, resolvers: requestDatumResolvers})
 
+const authClient = new ( new GoogleAuth ).OAuth2(process.env.GOOGLE_CLIENT_ID)
+
+const generateNonceString = () => {
+  return base64url(crypto.randomBytes(64))
+}
+
 qaApp.use(cors())
+
 
 qaApp.use(
     '/graphql',
     bodyParser.json(),
-    graphqlExpress({ schema }),
+    graphqlExpress((request) => {
+      return {
+        schema, 
+        context: { token: request.headers.authorization.split(' ')[1] }
+      }
+    }),
 )
 
 
@@ -32,11 +43,34 @@ qaApp.use(
     graphiqlExpress({ endpointURL: '/graphql' }),
 )
 
-// qaApp.use(function(req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "*")
-//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
-//   next()
-// })
+async function authenticationHandler( req, res ) {
+   async function googleSuccessCallback(e, login) {
+    if(e) {
+      console.log(e)
+      res.sendStatus(500)
+      return
+    }
+    let payload = login.getPayload()
+    if(process.env.GSUITE_DOMAIN == payload['hd']) {
+      const user = (await db.User.findOrCreate({ where: { email: payload['email'], token: payload['sub']} }))[0]
+      const dstroyed_sessions = await db.Session.destroy({ where: { user_id: user.id } })
+      const session = await db.Session.create({ nonce: generateNonceString(), user_id: user.id})
+      res.write(session.nonce)
+      res.end()
+      return
+    } else {
+      res.sendStatus(401)
+      return
+    }
+  }
+  authClient.verifyIdToken( req.headers.google_access_token, process.env.GOOGLE_CLIENT_ID, googleSuccessCallback)
+}
+
+qaApp.use(
+  '/auth',
+  authenticationHandler
+)
+
 
 async function initServer(app, db) {
   let db_success = await initDB(db)

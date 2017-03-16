@@ -1,30 +1,21 @@
 'use strict';
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    return queryInterface.createTable('RequestData', {
+    return queryInterface.createTable('Sessions', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      created_at: {
-        type: Sequelize.TIME
-      },
-      updated_at: {
-        type: Sequelize.TIME
-      },
-      parsed_request: {
-        type: Sequelize.STRING
-      },
-      method: {
+      id: {
         type: Sequelize.INTEGER
       },
-      data: {
-        type: Sequelize.JSON
+      user_id: {
+        type: Sequelize.INTEGER
       },
-      form: {
-        type: Sequelize.JSON
+      nonce: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -37,6 +28,6 @@ module.exports = {
     });
   },
   down: function(queryInterface, Sequelize) {
-    return queryInterface.dropTable('RequestData');
+    return queryInterface.dropTable('Sessions');
   }
 };

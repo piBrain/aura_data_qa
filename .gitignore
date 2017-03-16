@@ -1,2 +1,4 @@
 node_modules/
 .env
+front-end/bundle.js
+front-end/bundle.js.map
