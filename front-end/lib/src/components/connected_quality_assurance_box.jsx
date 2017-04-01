@@ -53,8 +53,6 @@ const updateRecord = gql`
     }
 `
 const mapStateToProps = (state) => {
-  console.log(state.login.serverNonce)
-  console.log(state.login.serverNonce ? true : false)
   return {
     in_validation: state.qa.in_validation,
     completed_count: state.qa.completed_count,

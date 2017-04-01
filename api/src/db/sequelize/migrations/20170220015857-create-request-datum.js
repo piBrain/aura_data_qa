@@ -18,13 +18,18 @@ module.exports = {
         type: Sequelize.STRING
       },
       method: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING,
+        allowNull: false
       },
       data: {
-        type: Sequelize.JSON
+        type: Sequelize.JSON,
+        allowNull: false,
+        defaultValue: {}
       },
       form: {
-        type: Sequelize.JSON
+        type: Sequelize.JSON,
+        allowNull: false,
+        defaultValue: {}
       },
       createdAt: {
         allowNull: false,
@@ -33,6 +38,16 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      found_at: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: ''
+      },
+      validated: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
       }
     });
   },
