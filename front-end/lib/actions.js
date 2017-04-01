@@ -44,7 +44,7 @@ export const rejectLogin = (err) => ({type: REJECT_LOGIN, err})
 
 export const requestNonceFromServer = ( googleResponse, route ) => {
   return ( dispatch ) => {
-    fetch( 'http://localhost:4200/auth', { method: 'POST', headers: { google_access_token: googleResponse.tokenId } } )
+    fetch( 'https://qa-tool.pibrain.io/auth', { method: 'POST', headers: { 'google-access-token': googleResponse.tokenId } } )
     .then(( response ) => {
       response.text()
         .then((body) => {

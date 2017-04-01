@@ -63,7 +63,7 @@ async function authenticationHandler( req, res ) {
       return
     }
   }
-  authClient.verifyIdToken( req.headers.google_access_token, process.env.GOOGLE_CLIENT_ID, googleSuccessCallback)
+  authClient.verifyIdToken( req.headers['google-access-token'], process.env.GOOGLE_CLIENT_ID, googleSuccessCallback)
 }
 
 qaApp.use(

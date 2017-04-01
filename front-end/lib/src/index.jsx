@@ -11,7 +11,7 @@ import createHistory from 'history/createBrowserHistory'
 import thunk from 'redux-thunk';
 
 const history = createHistory()
-const networkInterface = createNetworkInterface({ uri: 'http://localhost:4200/graphql' })
+const networkInterface = createNetworkInterface({ uri: 'https://qa-tool.pibrain.io/graphql' })
 
 const apollo_client = new ApolloClient({
   networkInterface
