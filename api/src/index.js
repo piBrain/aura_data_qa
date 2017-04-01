@@ -1,9 +1,9 @@
+import { config as dotEnvConfig } from 'dotenv'
 dotEnvConfig()
 import bodyParser from 'body-parser'
 import express from 'express'
 import { graphiqlExpress, graphqlExpress } from 'graphql-server-express'
 import { makeExecutableSchema } from 'graphql-tools'
-import { config as dotEnvConfig } from 'dotenv'
 import typeDefs from './db/graphql/schema/base_schema'
 import requestDatumResolvers from './db/graphql/resolvers/requestdatum_resolver'
 import db from './db/sequelize/models/db_connection'
