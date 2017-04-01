@@ -1,3 +1,4 @@
+dotEnvConfig()
 import bodyParser from 'body-parser'
 import express from 'express'
 import { graphiqlExpress, graphqlExpress } from 'graphql-server-express'
@@ -11,7 +12,6 @@ import GoogleAuth from 'google-auth-library'
 import crypto from 'crypto'
 import base64url from 'base64url'
 
-dotEnvConfig()
 
 const qaApp = express()
 

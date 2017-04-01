@@ -32,7 +32,6 @@ export default class DataBox extends React.Component {
     let order = 0
     for(let key in this.props.dataField) {
       order++
-
       fields.push(
         <ListGroupItem key={`${key}-LGI`} style={this.listElementStyle(order)}>
           {this.buildFormControl(key, this.handleFieldNameChange, key)}----{this.buildFormControl(key,this.handleFieldChange,this.props.dataField[key])}

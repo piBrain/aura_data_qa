@@ -37,7 +37,11 @@ const records_by_range_query = (_, { id, range }) => {
 
 const first_non_validated_record = (_, args, context) => {
   const executeQuery = () => {
-    return db.RequestDatum.findOne({ where: { validated: false  } })
+    return db.RequestDatum
+      .findOne({ 
+        where: { validated: false  },
+        order: [ db.Sequelize.fn( 'RANDOM' ) ]
+      })
   }
   return authHandler(context, executeQuery)
 }

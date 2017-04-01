@@ -84,7 +84,7 @@ export default class QualityAssuranceBox extends React.Component {
     if(!nextProps.CurrentRecord.loading && nextProps.isNewRecord) {
       let { id, parsed_request, method, data, form, found_at, commandEx1, commandEx2 } = nextProps.CurrentRecord.firstNonValidatedRecord
       this.props.toggleNewRecord()
-      this.props.updateIntermediate( id, parsed_request, found_at, method, data, form, commandEx1, commandEx2)
+      this.props.updateIntermediate( id, parsed_request, found_at, method, JSON.parse(data), JSON.parse(form), commandEx1, commandEx2) 
       window.open(found_at, '_blank', 'location=0')
     }
   }
