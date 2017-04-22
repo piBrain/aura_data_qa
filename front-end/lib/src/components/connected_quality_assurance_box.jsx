@@ -15,14 +15,12 @@ import { push } from 'react-router-redux';
 const currentRecord = gql`
   query CurrentRecord {
     firstNonValidatedRecord {
-     id
-     parsed_request
-     method
-     data
-     form
-     found_at
-     commandEx1
-     commandEx2
+       id
+       parsed_request
+       method
+       data
+       form
+       found_at
     }
   }
 
@@ -36,8 +34,8 @@ const updateRecord = gql`
     $updatedValidation: Boolean!,
     $updatedForm: JSON,
     $updatedData: JSON,
-    $updatedCommandEx1: String!,
-    $updatedCommandEx2: String!)
+    $updatedFoundAt: String,
+    $newCommandExs: [String!],
     {
       mutateRequestDatum(
         id: $id,
@@ -45,8 +43,8 @@ const updateRecord = gql`
         updatedData: $updatedData,
         updatedForm: $updatedForm,
         updatedMethod: $updatedMethod,
-        updatedCommandEx1: $updatedCommandEx1,
-        updatedCommandEx2: $updatedCommandEx2,
+        updatedFoundAt: $updatedFoundAt,
+        newCommandExs: $newCommandExs,
         updatedRequest: $updatedRequest) {
           id
         }
@@ -85,7 +83,7 @@ const fetchNonValidatedRecord = graphql(currentRecord, {
 
 const persistChangesAndValidate = graphql(updateRecord, {
   props: ({ mutate }) => ({
-    persistChangesAndValidate: ( { id, request, method, data, form, commandEx1, commandEx2 } ) => {
+    persistChangesAndValidate: ( { id, request, method, data, form, commandEx1, commandEx2, found_at } ) => {
       return mutate({ 
         variables: { id,
                      updatedRequest: request,
@@ -93,8 +91,8 @@ const persistChangesAndValidate = graphql(updateRecord, {
                      updatedForm: form,
                      updatedData: data,
                      updatedMethod: method,
-                     updatedCommandEx1: commandEx1,
-                     updatedCommandEx2: commandEx2} })
+                     updatedFoundAt: found_at,
+                     newCommandExs: [commandEx1, commandEx2] } })
     }
   }),
 })

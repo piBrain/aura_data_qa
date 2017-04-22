@@ -27,6 +27,7 @@ export default class QualityAssuranceBox extends React.Component {
     this.updateData = this.updateData.bind(this)
     this.updateForm = this.updateForm.bind(this)
     this.updateMethod = this.updateMethod.bind(this)
+    this.updateFoundAt = this.updateFoundAt.bind(this)
     this.updateCommandEx1 = this.updateCommandEx1.bind(this)
     this.updateCommandEx2 = this.updateCommandEx2.bind(this)
   }
@@ -113,6 +114,16 @@ export default class QualityAssuranceBox extends React.Component {
     )
   }
 
+  updateFoundAt(target) {
+    let newFoundAt = target.value
+    let intermediateRecord = this.props.intermediateRecord
+    this.props.updateIntermediate(
+      intermediateRecord.id,
+      intermediateRecord.request,
+      newFoundAt,
+    )
+  }
+
   updateCommandEx1(target) {
     let newParsedRequestValue = target.value
     let intermediateRecord = this.props.intermediateRecord
@@ -149,6 +160,7 @@ export default class QualityAssuranceBox extends React.Component {
       <RestRequestBox
         onRequestChange={this.updateParsedRequest}
         onMethodChange={this.updateMethod}
+        onFoundAtChange={this.updateFoundAt}
         onCommandEx1Change={this.updateCommandEx1}
         onCommandEx2Change={this.updateCommandEx2}
         methodValue={ intermediateRecord.method }
