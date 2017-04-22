@@ -48,7 +48,12 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false
-      }
+      },
+      prioritized: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
     });
   },
   down: function(queryInterface, Sequelize) {
