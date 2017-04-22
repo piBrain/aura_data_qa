@@ -3191,9 +3191,9 @@ react-deep-force-update@^1.0.0:
     loose-envify "^1.1.0"
     object-assign "^4.1.0"
 
-react-google-login@^2.8.5:
-  version "2.8.5"
-  resolved "https://registry.yarnpkg.com/react-google-login/-/react-google-login-2.8.5.tgz#c2ae0e89d445123cf561c32fe4b1d2a5d1963f47"
+react-google-login@^2.8.7:
+  version "2.8.7"
+  resolved "https://registry.yarnpkg.com/react-google-login/-/react-google-login-2.8.7.tgz#cd9db6f388504e24a07e8c873e6b1f11f5cc199f"
   dependencies:
     "@types/react" "*"
 
