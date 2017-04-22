@@ -13,17 +13,17 @@ async function authHandler(context, callback, callback_args=undefined) {
 }
 
 const update = (_, args, context) => {
-  const executeUpdate = ({ id, newUpdatedAt=(new Date()), updatedRequest, updatedData, updatedForm, updatedMethod, updatedValidation, updatedCommandEx1, updatedCommandEx2}) => {
+  const executeUpdate = ({ id, newUpdatedAt=(new Date()), updatedRequest, updatedData, updatedForm, updatedMethod, updatedValidation, newCommandExs, updatedFoundAt, }) => {
       return db.RequestDatum.update({
         updated_at: newUpdatedAt,
         parsed_request: updatedRequest,
         data: updatedData,
         form: updatedForm,
+        found_at: updatedFoundAt,
         method: updatedMethod,
-        commandEx1: updatedCommandEx1,
-        commandEx2: updatedCommandEx2,
         validated: updatedValidation,
       }, { where: { id: id } })
+      .addCommandExs(newCommandExs)
     }
   authHandler(context, executeUpdate, args)
 }
@@ -39,7 +39,10 @@ const first_non_validated_record = (_, args, context) => {
   const executeQuery = () => {
     return db.RequestDatum
       .findOne({ 
-        where: { validated: false  },
+        where: {
+          prioritized: true,
+          validated: false,
+        },
         order: [ db.Sequelize.fn( 'RANDOM' ) ]
       })
   }
