@@ -1,6 +1,7 @@
 'use strict'
 
 const awsServerlessExpress = require('aws-serverless-express')
+require('babel-register')
 
 const app = require('./src/index').default
 const initDB = require('./src/index').initDB
