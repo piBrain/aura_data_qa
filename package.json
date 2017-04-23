@@ -1,0 +1,20 @@
+{
+  "name": "aura_data_qa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "-",
+  "scripts": {
+    "deploy:api": "if [ -e api.zip ]; then rm -f api.zip; fi && zip -r api * && aws lambda update-function-code --function-name aura_data_api_prod --zip-file fileb:///Users/watsonmarkson/piBrain/aura_data_qa/api.zip",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pibrain/aura_data_qa.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pibrain/aura_data_qa/issues"
+  },
+  "homepage": "https://github.com/pibrain/aura_data_qa#readme"
+}
