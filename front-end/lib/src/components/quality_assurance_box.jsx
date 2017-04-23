@@ -165,6 +165,7 @@ export default class QualityAssuranceBox extends React.Component {
         onCommandEx2Change={this.updateCommandEx2}
         methodValue={ intermediateRecord.method }
         requestValue={ intermediateRecord.request }
+        foundAtValue={ intermediateRecord.found_at }
         commandEx1Value={ intermediateRecord.commandEx1 }
         commandEx2Value={ intermediateRecord.commandEx2 }
         disabled={ inValidation } 

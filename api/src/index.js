@@ -15,6 +15,9 @@ import base64url from 'base64url'
 
 const qaApp = express()
 
+// console.log(typeDefs)
+console.log(requestDatumResolvers)
+
 const schema = makeExecutableSchema({typeDefs: typeDefs, resolvers: requestDatumResolvers})
 
 const authClient = new ( new GoogleAuth ).OAuth2(process.env.GOOGLE_CLIENT_ID)
@@ -27,14 +30,18 @@ qaApp.use(cors())
 
 
 qaApp.use(
-    '/graphql',
-    bodyParser.json(),
-    graphqlExpress((request) => {
-      return {
-        schema, 
-        context: { token: request.headers.authorization.split(' ')[1] }
-      }
-    }),
+  '/graphql',
+  bodyParser.json(),
+  graphqlExpress((request) => {
+    const token = request.headers
+      && request.headers.authorization
+      && request.headers.authorization.split(' ')[1]
+      || undefined
+    return {
+      context: { token },
+      schema, 
+    }
+  }),
 )
 
 
@@ -72,11 +79,10 @@ qaApp.use(
 )
 
 
-async function initServer(app, db) {
+export async function initHttpServer() {
   let db_success = await initDB(db)
 
-  console.log(`pgstring: ${process.env.DATABASE_URL}`)
-  const server = app.listen(process.env.LISTEN_PORT)
+  const server = qaApp.listen(process.env.LISTEN_PORT)
   return new Promise((resolve, reject) => {
     server.on('listening', () => {
       console.log(`DataQA API now listening on port ${process.env.LISTEN_PORT}`)
@@ -86,12 +92,13 @@ async function initServer(app, db) {
   })
 }
 
-async function initDB(db) {
-  return new Promise((resolve, reject) => {
-    console.log('Initializing DB.')
-    resolve(db.sequelize.sync())
-  })
+export function initDB() {
+  console.log('Initializing DB.')
+  return db.sequelize.sync()
 }
 
 
-initServer(qaApp,db)
+// initServer(qaApp,db)
+
+
+export default qaApp

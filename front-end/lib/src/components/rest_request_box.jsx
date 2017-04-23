@@ -38,7 +38,7 @@ export default class RestRequestBox extends React.Component {
           <ControlLabel style={ this.props.style.controlLabel }>Doc Address:</ControlLabel>
           <FormControl
             type='text'
-            value={this.props.found_at}
+            value={this.props.foundAtValue}
             disabled={this.props.disabled}
             onChange={this.handleFoundAtChange}
           />

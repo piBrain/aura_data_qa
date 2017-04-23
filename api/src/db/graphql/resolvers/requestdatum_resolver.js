@@ -3,30 +3,43 @@ import { merge  } from 'lodash'
 import GraphQLJSON from 'graphql-type-json'
 import { GraphQLDateTime } from 'graphql-iso-date'
 
-async function authHandler(context, callback, callback_args=undefined) {
+async function authHandler(context, callback, callback_args) {
   const session = await db.Session.findOne({ where: { nonce: context.token } })
   if( session == null ) { return }
-  debugger;
+  // debugger;
   const user = await db.User.findOne({ where: { id: session.user_id } })
   if ( typeof user === "undefined" || user == null) { return }
   return callback(callback_args)
 }
 
 const update = (_, args, context) => {
-  const executeUpdate = ({ id, newUpdatedAt=(new Date()), updatedRequest, updatedData, updatedForm, updatedMethod, updatedValidation, newCommandExs, updatedFoundAt, }) => {
-      return db.RequestDatum.update({
-        updated_at: newUpdatedAt,
-        parsed_request: updatedRequest,
-        data: updatedData,
-        form: updatedForm,
-        found_at: updatedFoundAt,
-        method: updatedMethod,
-        validated: updatedValidation,
-      }, { where: { id: id } })
-      .addCommandExs(newCommandExs)
-    }
+  const executeUpdate = ({
+    id,
+    newUpdatedAt = (new Date()),
+    updatedRequest,
+    updatedData,
+    updatedForm,
+    updatedMethod,
+    updatedValidation,
+    newCommandExs,
+    updatedFoundAt,
+  }) => {
+    return db.RequestDatum.update({
+      updated_at: newUpdatedAt,
+      parsed_request: updatedRequest,
+      data: updatedData,
+      form: updatedForm,
+      found_at: updatedFoundAt,
+      method: updatedMethod,
+      validated: updatedValidation,
+    }, { where: { id: id } }
+    ).then(requestDatumInstance =>
+      requestDatumInstance.addCommandExs(newCommandExs)
+    )
+  }
   authHandler(context, executeUpdate, args)
 }
+
 const single_record_query = (_, { id }) => {
   return db.RequestDatum.findById(id)
 }

@@ -9,8 +9,8 @@ module.exports = function(sequelize, DataTypes) {
     },
     user_id: DataTypes.INTEGER,
     request_datum_id: DataTypes.INTEGER,
-    text: Sequelize.STRING(2048),
-    notes: Sequelize.TEXT,
+    text: DataTypes.STRING(2048),
+    notes: DataTypes.TEXT,
   }, {
     classMethods: {
       associate: function(models) {

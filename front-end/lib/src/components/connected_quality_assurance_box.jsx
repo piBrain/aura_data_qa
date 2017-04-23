@@ -36,6 +36,7 @@ const updateRecord = gql`
     $updatedData: JSON,
     $updatedFoundAt: String,
     $newCommandExs: [String!],
+  )
     {
       mutateRequestDatum(
         id: $id,
