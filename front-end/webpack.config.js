@@ -32,7 +32,7 @@ module.exports = {
   entry: [
     './lib/src/index.jsx'
   ],
-  watch: true,
+  watch: false,
   colors: true,
   progress: true,
   resolve: {
