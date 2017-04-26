@@ -33,6 +33,7 @@
     "sequelize": "^3.30.2"
   },
   "devDependencies": {
+    "babel-cli": "^6.24.1",
     "chai": "^3.5.0",
     "eslint": "^3.15.0",
     "eslint-plugin-import": "^2.2.0",
@@ -42,9 +43,11 @@
     "nodemon": "^1.11.0"
   },
   "scripts": {
+    "build": "./node_modules/.bin/babel src --out-dir lib --source-maps --quiet",
     "debug": "nodemon --inspect --require babel-core/register --require babel-polyfill src/index.js",
-    "deploy": "if [ -e api.zip ]; then rm -f api.zip; fi && zip -r api * && aws lambda update-function-code --function-name aura_data_api_prod --zip-file fileb://api.zip",
-    "start-mon": "nodemon --require babel-core/register --require babel-polyfill src/index.js",
+    "deploy": "yarn run build && yarn run publish",
+    "publish": "if [ -e api.zip ]; then rm -f api.zip; fi && zip -qr api * && aws lambda update-function-code --function-name aura_data_api_prod --zip-file fileb://api.zip",
+    "start-mon": "nodemon local.js",
     "start": "node --require babel-core/register --require babel-polyfill src/index.js",
     "test": "jest --config jest-config.json"
   }

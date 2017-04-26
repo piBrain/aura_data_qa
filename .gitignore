@@ -3,3 +3,4 @@ node_modules/
 front-end/bundle.js
 front-end/bundle.js.map
 api.zip
+api/lib

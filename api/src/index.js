@@ -1,3 +1,4 @@
+import awsServerlessExpress from 'aws-serverless-express'
 import { config as dotEnvConfig } from 'dotenv'
 dotEnvConfig()
 import bodyParser from 'body-parser'
@@ -16,7 +17,7 @@ import base64url from 'base64url'
 const qaApp = express()
 
 // console.log(typeDefs)
-console.log(requestDatumResolvers)
+// console.log(requestDatumResolvers)
 
 const schema = makeExecutableSchema({typeDefs: typeDefs, resolvers: requestDatumResolvers})
 
@@ -78,9 +79,11 @@ qaApp.use(
   authenticationHandler
 )
 
+const db_sync_result = initDB()
+
 
 export async function initHttpServer() {
-  let db_success = await initDB(db)
+  let db_success = await db_sync_result
 
   const server = qaApp.listen(process.env.LISTEN_PORT)
   return new Promise((resolve, reject) => {
@@ -100,5 +103,11 @@ export function initDB() {
 
 // initServer(qaApp,db)
 
+const qaServer = awsServerlessExpress.createServer(qaApp)
 
-export default qaApp
+export const lambdaHandler = async (event, context) => {
+  await db_sync_result
+  // console.log(`process.env keys: ${Object.keys(process.env)}`)
+  console.log(`process.env.DATABASE_URL: ${process.env.DATABASE_URL}`)
+  return awsServerlessExpress.proxy(qaServer, event, context)
+}
