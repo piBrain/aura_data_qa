@@ -35,7 +35,7 @@ const updateIntermediate = ( action, state ) => {
       form: (action.form || state.intermediateRecord.form),
       commandEx1: (action.commandEx1 || state.intermediateRecord.commandEx1),
       commandEx2: (action.commandEx2 || state.intermediateRecord.commandEx2),
-      found_at: (action.found_at || state.intermediateRecord.found_at),
+      foundAt: (action.foundAt || state.intermediateRecord.foundAt),
     }
   }
 }
@@ -72,7 +72,7 @@ const initial_state = {
     form: {},
     commandEx1: '',
     commandEx2: '',
-    found_at: null,
+    foundAt: null,
   },
   loading: false,
 }

@@ -83,10 +83,10 @@ export default class QualityAssuranceBox extends React.Component {
       return
     }
     if(!nextProps.CurrentRecord.loading && nextProps.isNewRecord) {
-      let { id, parsed_request, method, data, form, found_at, commandEx1, commandEx2 } = nextProps.CurrentRecord.firstNonValidatedRecord
+      let { id, parsed_request, method, data, form, foundAt, commandEx1, commandEx2 } = nextProps.CurrentRecord.firstNonValidatedRecord
       this.props.toggleNewRecord()
-      this.props.updateIntermediate( id, parsed_request, found_at, method, JSON.parse(data), JSON.parse(form), commandEx1, commandEx2) 
-      window.open(found_at, '_blank', 'location=0')
+      this.props.updateIntermediate( id, parsed_request, foundAt, method, JSON.parse(data), JSON.parse(form), commandEx1, commandEx2) 
+      window.open(foundAt, '_blank', 'location=0')
     }
   }
 
@@ -165,7 +165,7 @@ export default class QualityAssuranceBox extends React.Component {
         onCommandEx2Change={this.updateCommandEx2}
         methodValue={ intermediateRecord.method }
         requestValue={ intermediateRecord.request }
-        foundAtValue={ intermediateRecord.found_at }
+        foundAtValue={ intermediateRecord.foundAt }
         commandEx1Value={ intermediateRecord.commandEx1 }
         commandEx2Value={ intermediateRecord.commandEx2 }
         disabled={ inValidation } 

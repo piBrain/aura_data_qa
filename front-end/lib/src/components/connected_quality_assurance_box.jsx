@@ -20,7 +20,7 @@ const currentRecord = gql`
        method
        data
        form
-       found_at
+       foundAt
     }
   }
 
@@ -84,7 +84,7 @@ const fetchNonValidatedRecord = graphql(currentRecord, {
 
 const persistChangesAndValidate = graphql(updateRecord, {
   props: ({ mutate }) => ({
-    persistChangesAndValidate: ( { id, request, method, data, form, commandEx1, commandEx2, found_at } ) => {
+    persistChangesAndValidate: ( { id, request, method, data, form, commandEx1, commandEx2, foundAt } ) => {
       return mutate({ 
         variables: { id,
                      updatedRequest: request,
@@ -92,7 +92,7 @@ const persistChangesAndValidate = graphql(updateRecord, {
                      updatedForm: form,
                      updatedData: data,
                      updatedMethod: method,
-                     updatedFoundAt: found_at,
+                     updatedFoundAt: foundAt,
                      newCommandExs: [commandEx1, commandEx2] } })
     }
   }),
