@@ -1,5 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
+const env = process.env.NDOE_ENV //|| throw new Error('Please specify "NODE_ENV" before building')
+const config = JSON.stringify(require('./appConfigs')[process.env.NODE_ENV])
 
 module.exports = {
   module: {
@@ -57,6 +59,7 @@ module.exports = {
     'react/addons': 'react',
     'react/lib/ExecutionEnvironment': 'react',
     'react/lib/ReactContext': 'react',
+    config,
   },
   devServer: {
     historyApiFallback: true,

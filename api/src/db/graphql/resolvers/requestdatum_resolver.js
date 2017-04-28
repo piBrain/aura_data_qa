@@ -49,7 +49,9 @@ const records_by_range_query = (_, { id, range }) => {
 }
 
 const first_non_validated_record = (_, args, context) => {
+  console.log('someone asked for a record')
   const executeQuery = () => {
+    console.log('gonna look for a record')
     return db.RequestDatum
       .findOne({ 
         where: {
@@ -79,6 +81,7 @@ const requestDatumQueries = {
 const requestDatum = {
   RequestDatum: {
     id: ({id}) => (id),
+    foundAt: ({ found_at }) => (found_at),
   }
 }
 

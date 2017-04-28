@@ -1,3 +1,4 @@
+import config from 'config'
 import { push } from 'react-router-redux';
 
 export const TOGGLE_MODE = 'TOGGLE_VALIDATION'
@@ -44,7 +45,7 @@ export const rejectLogin = (err) => ({type: REJECT_LOGIN, err})
 
 export const requestNonceFromServer = ( googleResponse, route ) => {
   return ( dispatch ) => {
-    fetch( 'https://2dusz11q81.execute-api.us-east-1.amazonaws.com/prod/auth', { method: 'POST', headers: { 'google-access-token': googleResponse.tokenId } } )
+    fetch( config.apiUrl, { method: 'POST', headers: { 'google-access-token': googleResponse.tokenId } } )
     .then(( response ) => {
       response.text()
         .then((body) => {

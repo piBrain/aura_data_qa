@@ -72,7 +72,7 @@ const initial_state = {
     form: {},
     commandEx1: '',
     commandEx2: '',
-    foundAt: null,
+    foundAt: '',
   },
   loading: false,
 }

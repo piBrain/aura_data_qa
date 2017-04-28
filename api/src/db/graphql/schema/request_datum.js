@@ -17,7 +17,7 @@ export default () => [`
 
     validated: Boolean
 
-    found_at: String
+    foundAt: String
 
   }`
 ]

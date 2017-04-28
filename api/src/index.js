@@ -1,3 +1,5 @@
+console.log('index.js')
+
 import awsServerlessExpress from 'aws-serverless-express'
 import { config as dotEnvConfig } from 'dotenv'
 dotEnvConfig()
@@ -34,6 +36,7 @@ qaApp.use(
   '/graphql',
   bodyParser.json(),
   graphqlExpress((request) => {
+    console.log(`request ${request ? 'exists' : 'doesn\'t exist'}`)
     const token = request.headers
       && request.headers.authorization
       && request.headers.authorization.split(' ')[1]
@@ -85,10 +88,10 @@ const db_sync_result = initDB()
 export async function initHttpServer() {
   let db_success = await db_sync_result
 
-  const server = qaApp.listen(process.env.LISTEN_PORT)
+  const server = qaApp.listen(process.env.port)
   return new Promise((resolve, reject) => {
     server.on('listening', () => {
-      console.log(`DataQA API now listening on port ${process.env.LISTEN_PORT}`)
+      console.log(`DataQA API now listening on port ${process.env.port}`)
       resolve(server)
     })
     server.on('error', err => reject(err))
