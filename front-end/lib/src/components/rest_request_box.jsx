@@ -23,6 +23,14 @@ export default class RestRequestBox extends React.Component {
     this.props.onFoundAtChange(e.target)
   }
 
+  handleNotesChange({ target }) {
+    this.props.onNotesChange(target)
+  }
+
+  handleTagsChange({ target }) {
+    this.props.onTagsChange(target)
+  }
+
   handleCommandEx1Change(e) {
     this.props.onCommandEx1Change(e.target)
   }
@@ -69,6 +77,20 @@ export default class RestRequestBox extends React.Component {
             value={this.props.commandEx2Value}
             disabled={this.props.disabled}
             onChange={this.handleCommandEx2Change}
+          />
+          <ControlLabel style={ this.props.style.controlLabel }>Notes:</ControlLabel>
+          <FormControl
+            type='text'
+            value={this.props.notes}
+            disabled={this.props.disabled}
+            onChange={this.handleNotesChange}
+          />
+          <ControlLabel style={ this.props.style.controlLabel }>Tags:</ControlLabel>
+          <FormControl
+            type='text'
+            value={this.props.notes}
+            disabled={this.props.disabled}
+            onChange={this.handleTagsChange}
           />
         </FormGroup>
       </form>

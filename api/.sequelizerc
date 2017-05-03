@@ -5,3 +5,5 @@ module.exports = {
   'migrations-path': path.resolve('./src/db/sequelize', 'migrations'),
   'models-path': path.resolve('./src/db/sequelize', 'models')
 }
+
+console.log('sequelize config', JSON.stringify(module.exports))

@@ -25,7 +25,22 @@ export const toggleValidation = () => ( { type: TOGGLE_MODE } )
 
 export const toggleNewRecord = () => ( { type: TOGGLE_NEW_RECORD } )
 
-export const updateIntermediate = ( id, request, foundAt=null, method=null, data=null, form=null, commandEx1=null, commandEx2=null ) => {
+export const updateIntermediate = ({
+  id,
+  request,
+  foundAt=null,
+  method=null,
+  data=null,
+  form=null,
+  commandEx1=null,
+  commandEx2=null
+} = {
+  foundAt: null,
+  method: null,
+  data: null,
+  commandEx1: null,
+  commandEx2: null
+}) => {
   return { type: UPDATE_INTERMEDIATE, id, request, foundAt, method, data, form, commandEx1, commandEx2  }
 }
 

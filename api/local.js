@@ -2,6 +2,6 @@
 
 require('babel-register')
 
-const moduleDirectory = process.env.NODE_ENV === 'production' ? 'lib' : 'src'
+console.log('spinning up local server')
 
-require(`./${moduleDirectory}/index`).initHttpServer()
+require('./src/index').initHttpServer()

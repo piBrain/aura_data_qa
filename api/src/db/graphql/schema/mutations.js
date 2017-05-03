@@ -12,7 +12,10 @@ export default () => [
         updatedValidation: Boolean!,
         updatedFoundAt: String,
         newCommandExs: [String!],
+        updatedNotes: String,
+        updatedTags: String,
     ): RequestDatum
+    prioritizeDomain( domain: String): String
   }`,
   RequestDatum
 ]

@@ -17,11 +17,13 @@ module.exports = function(sequelize, DataTypes) {
     validated: DataTypes.BOOLEAN,
     found_at: DataTypes.STRING,
     prioritized: DataTypes.BOOLEAN,
+    notes: DataTypes.TEXT,
+    tags: DataTypes.STRING,
   }, {
     classMethods: {
       associate: function(models) {
         // associations can be defined here
-        RequestDatum.hasMany(models.CommandExample, { as: 'CommandExamples' })
+        RequestDatum.hasMany(models.CommandExample)
       }
     }
   });

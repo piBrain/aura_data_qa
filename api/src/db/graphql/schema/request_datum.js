@@ -19,5 +19,9 @@ export default () => [`
 
     foundAt: String
 
+    notes: String
+
+    tags: String
+
   }`
 ]

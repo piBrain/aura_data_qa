@@ -2,11 +2,10 @@ import QualityAssuranceBox from './quality_assurance_box'
 
 import { connect } from 'react-redux'
 
-import { graphql, compose } from 'react-apollo'
+import { gql, graphql, compose } from 'react-apollo'
 
 import { bindActionCreators } from 'redux'
 
-import gql from 'graphql-tag'
 
 import { rejectInvalid, openAcceptModal, closeAcceptModal, toggleNewRecord, updateIntermediate } from '../../actions'
 
@@ -21,6 +20,8 @@ const currentRecord = gql`
        data
        form
        foundAt
+       notes
+       tags
     }
   }
 
@@ -36,6 +37,8 @@ const updateRecord = gql`
     $updatedData: JSON,
     $updatedFoundAt: String,
     $newCommandExs: [String!],
+    $updatedNotes: String,
+    $updatedTags: String,
   )
     {
       mutateRequestDatum(
@@ -46,7 +49,10 @@ const updateRecord = gql`
         updatedMethod: $updatedMethod,
         updatedFoundAt: $updatedFoundAt,
         newCommandExs: $newCommandExs,
-        updatedRequest: $updatedRequest) {
+        updatedRequest: $updatedRequest,
+        updatedNotes: $updatedNotes,
+        updatedTags: $updatedTags,
+      ) {
           id
         }
     }
@@ -84,7 +90,7 @@ const fetchNonValidatedRecord = graphql(currentRecord, {
 
 const persistChangesAndValidate = graphql(updateRecord, {
   props: ({ mutate }) => ({
-    persistChangesAndValidate: ( { id, request, method, data, form, commandEx1, commandEx2, foundAt } ) => {
+    persistChangesAndValidate: ( { id, request, method, data, form, commandEx1, commandEx2, foundAt, notes, tags } ) => {
       return mutate({ 
         variables: { id,
                      updatedRequest: request,
@@ -93,7 +99,11 @@ const persistChangesAndValidate = graphql(updateRecord, {
                      updatedData: data,
                      updatedMethod: method,
                      updatedFoundAt: foundAt,
-                     newCommandExs: [commandEx1, commandEx2] } })
+                     newCommandExs: [commandEx1, commandEx2],
+                     newNotes: notes,
+                     newTags: tags,
+        },
+      })
     }
   }),
 })

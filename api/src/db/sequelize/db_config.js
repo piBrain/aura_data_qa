@@ -1,16 +1,14 @@
-require('dotenv').config()
+var config = require('../../../config')
+config()
 
-env = process.env.NODE_ENV //|| throw new Error('Please specify "NODE_ENV"')
-
-const configs = {
+module.exports = {
   "development": {
-    "dbUrl": process.env.DATABASE_URL || (throw new Error('Please specify "DATABASE_URL"')),
+    "url": process.env.DATABASE_URL,
     "dialect": "postgres",
   },
   local: {
-    dbUrl: 'postgres://127.0.0.1:5432/aura_qa_development',
+    "url": process.env.DATABASE_URL,
     dialect: 'postgres',
-    port: '3142',
   },
   "test": {
     "username": "aura",
@@ -20,11 +18,7 @@ const configs = {
     "dialect": "postgres"
   },
   "production": {
-    "dbUrl": process.env.PROD_DATABASE_URL || (throw new Error('Please specify "PROD_DATABASE_URL"')),
+    "url": process.env.PROD_DATABASE_URL,
     "dialect": "postgres"
   }
 }
-
-process.env = { ...{}, ...process.env, ...configs[env] }
-
-module.exports = configs

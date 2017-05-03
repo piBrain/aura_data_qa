@@ -1,16 +1,12 @@
-import db from '../../sequelize/models/db_connection'
 import { merge  } from 'lodash'
 import GraphQLJSON from 'graphql-type-json'
 import { GraphQLDateTime } from 'graphql-iso-date'
 
-async function authHandler(context, callback, callback_args) {
-  const session = await db.Session.findOne({ where: { nonce: context.token } })
-  if( session == null ) { return }
-  // debugger;
-  const user = await db.User.findOne({ where: { id: session.user_id } })
-  if ( typeof user === "undefined" || user == null) { return }
-  return callback(callback_args)
-}
+import db from '../../sequelize/models/db_connection'
+
+import authHandler from './authHandler'
+import prioritizeDomain from './prioritizeDomain'
+
 
 const update = (_, args, context) => {
   const executeUpdate = ({
@@ -23,6 +19,8 @@ const update = (_, args, context) => {
     updatedValidation,
     newCommandExs,
     updatedFoundAt,
+    updatedTags,
+    updatedNotes,
   }) => {
     return db.RequestDatum.update({
       updated_at: newUpdatedAt,
@@ -32,6 +30,8 @@ const update = (_, args, context) => {
       found_at: updatedFoundAt,
       method: updatedMethod,
       validated: updatedValidation,
+      tags: updatedTags,
+      notes: updatedNotes,
     }, { where: { id: id } }
     ).then(requestDatumInstance =>
       requestDatumInstance.addCommandExs(newCommandExs)
@@ -41,6 +41,12 @@ const update = (_, args, context) => {
 }
 
 const single_record_query = (_, { id }) => {
+const requestDatumMutations = {
+  Mutation: {
+    mutateRequestDatum: update,
+  }
+}
+
   return db.RequestDatum.findById(id)
 }
 
@@ -67,6 +73,7 @@ const first_non_validated_record = (_, args, context) => {
 const requestDatumMutations = {
   Mutation: {
     mutateRequestDatum: update,
+    prioritizeDomain,
   }
 }
 

@@ -1,7 +1,8 @@
 var path = require('path');
 var webpack = require('webpack');
 const env = process.env.NDOE_ENV //|| throw new Error('Please specify "NODE_ENV" before building')
-const config = JSON.stringify(require('./appConfigs')[process.env.NODE_ENV])
+const config = JSON.stringify(require('./config')())
+console.log('config', config)
 
 module.exports = {
   module: {

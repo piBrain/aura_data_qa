@@ -17,9 +17,6 @@ module.exports = {
       text: {
         type: Sequelize.STRING,
       },
-      notes: {
-        type: Sequelize.TEXT
-      },
     });
   },
 };

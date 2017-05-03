@@ -7,10 +7,6 @@ var basename  = path.basename(module.filename);
 var config    = require('../db_config.js')[process.env.NODE_ENV];
 var db        = {};
 
-// console.log(`process.env: ${JSON.stringify(process.env, null, 2)}`)
-console.log(`config: ${JSON.stringify(config, null, 2)}`)
-console.log(`gonna use ${config && config.url} for db conn`)
-
 if (config.url) {
   var sequelize = new Sequelize(config.url, config);
 } else {

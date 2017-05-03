@@ -36,6 +36,8 @@ const updateIntermediate = ( action, state ) => {
       commandEx1: (action.commandEx1 || state.intermediateRecord.commandEx1),
       commandEx2: (action.commandEx2 || state.intermediateRecord.commandEx2),
       foundAt: (action.foundAt || state.intermediateRecord.foundAt),
+      notes: (action.notes || state.intermediateRecord.notes),
+      tags: (action.tags || state.intermediateRecord.tags),
     }
   }
 }
@@ -47,11 +49,15 @@ const openAcceptModal = ( _, state ) => ({ ...state, is_accept_open: true })
 const closeAcceptModal = ( _, state ) => ({ ...state, is_accept_open: false  })
 
 const acceptLogin = ( action, state ) => {
+  console.log('acceptLogin')
+  console.log(JSON.stringify(action, null, 2))
   document.cookie = `piBrainQASessionNonce=${action.token};`
   return { ...state, serverNonce: action.token, loading: false }
 }
 
 const rejectLogin = ( action, state ) => {
+  console.log('rejectLogin')
+  console.log(JSON.stringify(action, null, 2))
   return { ...state, serverNonce: '', loading: false }
 } 
 
@@ -73,6 +79,8 @@ const initial_state = {
     commandEx1: '',
     commandEx2: '',
     foundAt: '',
+    notes: '',
+    tags: '',
   },
   loading: false,
 }
