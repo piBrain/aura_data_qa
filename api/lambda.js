@@ -1,7 +1,5 @@
 'use strict'
 
-require('babel-register')
-
 console.log('spinning up new lambda execution')
 
-exports.handler = require('./src/index').lambdaHandler
+exports.handler = require('./lib/index').lambdaHandler

@@ -40,6 +40,9 @@ qaApp.use(
   graphqlExpress((request) => {
     console.log('haylowe')
     console.log(`request ${request ? 'exists' : 'doesn\'t exist'}`)
+    console.log(JSON.stringify({
+      headers: request.headers,
+    }, null, 2))
     const token = request.headers
       && request.headers.authorization
       && request.headers.authorization.split(' ')[1]
@@ -60,7 +63,6 @@ qaApp.use(
 async function authenticationHandler( req, res ) {
   console.log('authenticationHandler')
   console.log(JSON.stringify({
-    req,
   }, null, 2))
    async function googleSuccessCallback(e, login) {
      console.log('googleSuccessCallback')
@@ -73,7 +75,6 @@ async function authenticationHandler( req, res ) {
     console.log(JSON.stringify({
       payload,
       login,
-      req,
     }, null, 2))
     if(process.env.GSUITE_DOMAIN == payload['hd']) {
       const user = (await db.User.findOrCreate({ where: { email: payload['email'], token: payload['sub']} }))[0]
