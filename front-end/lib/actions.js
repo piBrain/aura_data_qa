@@ -1,4 +1,4 @@
-import { apiUrl } from 'config'
+import { apiUrl } from '../config'
 import { push } from 'react-router-redux';
 
 export const TOGGLE_MODE = 'TOGGLE_VALIDATION'

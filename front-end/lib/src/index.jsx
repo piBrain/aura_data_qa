@@ -1,5 +1,5 @@
 import App from './App'
-import { apiUrl } from 'config'
+import { apiUrl } from '../../config'
 import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'

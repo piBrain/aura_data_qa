@@ -7,7 +7,12 @@ const configs = {
   },
 }
 
-const { NODE_ENV } = process.env
+let { NODE_ENV } = process.env
+
+if(typeof NODE_ENV === 'undefined') {
+  console.info('NODE_ENV not supplied falling back to local environment.')
+  NODE_ENV = 'local'
+}
 
 module.exports = () => {
   process.env = Object.assign(process.env, configs[NODE_ENV])
