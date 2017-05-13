@@ -1,4 +1,13 @@
 {
   "plugins": ["transform-object-rest-spread"],
-  "presets": ["latest"]
+  "presets": [
+    [
+    "env",
+      {
+        "targets": {
+          "node": 6.10
+        }
+      }
+    ]
+  ]
 }

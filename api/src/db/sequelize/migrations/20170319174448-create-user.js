@@ -26,8 +26,8 @@ module.exports = {
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   down: function(queryInterface, Sequelize) {

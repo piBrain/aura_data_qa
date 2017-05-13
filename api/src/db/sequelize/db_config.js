@@ -1,9 +1,14 @@
-require('dotenv').config()
+var config = require('../../../config')
+config()
 
 module.exports = {
   "development": {
     "url": process.env.DATABASE_URL,
-    "dialect": "postgres"
+    "dialect": "postgres",
+  },
+  local: {
+    "url": process.env.DATABASE_URL,
+    dialect: 'postgres',
   },
   "test": {
     "username": "aura",

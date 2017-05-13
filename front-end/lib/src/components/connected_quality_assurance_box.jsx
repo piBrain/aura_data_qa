@@ -2,11 +2,10 @@ import QualityAssuranceBox from './quality_assurance_box'
 
 import { connect } from 'react-redux'
 
-import { graphql, compose } from 'react-apollo'
+import { gql, graphql, compose } from 'react-apollo'
 
 import { bindActionCreators } from 'redux'
 
-import gql from 'graphql-tag'
 
 import { rejectInvalid, openAcceptModal, closeAcceptModal, toggleNewRecord, updateIntermediate } from '../../actions'
 
@@ -15,14 +14,14 @@ import { push } from 'react-router-redux';
 const currentRecord = gql`
   query CurrentRecord {
     firstNonValidatedRecord {
-     id
-     parsed_request
-     method
-     data
-     form
-     found_at
-     commandEx1
-     commandEx2
+       id
+       parsed_request
+       method
+       data
+       form
+       foundAt
+       notes
+       tags
     }
   }
 
@@ -36,8 +35,11 @@ const updateRecord = gql`
     $updatedValidation: Boolean!,
     $updatedForm: JSON,
     $updatedData: JSON,
-    $updatedCommandEx1: String!,
-    $updatedCommandEx2: String!)
+    $updatedFoundAt: String,
+    $newCommandExs: [String!],
+    $updatedNotes: String,
+    $updatedTags: String,
+  )
     {
       mutateRequestDatum(
         id: $id,
@@ -45,9 +47,12 @@ const updateRecord = gql`
         updatedData: $updatedData,
         updatedForm: $updatedForm,
         updatedMethod: $updatedMethod,
-        updatedCommandEx1: $updatedCommandEx1,
-        updatedCommandEx2: $updatedCommandEx2,
-        updatedRequest: $updatedRequest) {
+        updatedFoundAt: $updatedFoundAt,
+        newCommandExs: $newCommandExs,
+        updatedRequest: $updatedRequest,
+        updatedNotes: $updatedNotes,
+        updatedTags: $updatedTags,
+      ) {
           id
         }
     }
@@ -85,16 +90,20 @@ const fetchNonValidatedRecord = graphql(currentRecord, {
 
 const persistChangesAndValidate = graphql(updateRecord, {
   props: ({ mutate }) => ({
-    persistChangesAndValidate: ( { id, request, method, data, form, commandEx1, commandEx2 } ) => {
-      return mutate({ 
+    persistChangesAndValidate: ( { id, request, method, data, form, commandEx1, commandEx2, foundAt, notes, tags } ) => {
+      return mutate({
         variables: { id,
                      updatedRequest: request,
                      updatedValidation: true,
                      updatedForm: form,
                      updatedData: data,
                      updatedMethod: method,
-                     updatedCommandEx1: commandEx1,
-                     updatedCommandEx2: commandEx2} })
+                     updatedFoundAt: foundAt,
+                     newCommandExs: [commandEx1, commandEx2],
+                     newNotes: notes,
+                     newTags: tags,
+        },
+      })
     }
   }),
 })

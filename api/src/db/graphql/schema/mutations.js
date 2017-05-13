@@ -9,10 +9,13 @@ export default () => [
         updatedData: JSON,
         updatedForm: JSON,
         updatedMethod: String,
-        updatedCommandEx1: String!,
-        updatedCommandEx2: String!,
         updatedValidation: Boolean!,
+        updatedFoundAt: String,
+        newCommandExs: [String!],
+        updatedNotes: String,
+        updatedTags: String,
     ): RequestDatum
+    prioritizeDomain( domain: String): String
   }`,
   RequestDatum
 ]

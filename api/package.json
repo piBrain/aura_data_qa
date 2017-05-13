@@ -7,15 +7,16 @@
   "author": "piBrain, Inc.",
   "license": "MIT",
   "dependencies": {
+    "aws-serverless-express": "^2.2.0",
     "babel-core": "^6.22.1",
     "babel-eslint": "^7.1.1",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-polyfill": "^6.23.0",
+    "babel-preset-env": "^1.4.0",
     "babel-preset-latest": "^6.22.0",
     "bluebird": "^3.4.7",
     "body-parser": "^1.16.0",
     "cors": "^2.8.1",
-    "dotenv": "^4.0.0",
     "express": "^4.14.1",
     "google-auth-library": "^0.10.0",
     "graphql": "^0.9.1",
@@ -28,9 +29,11 @@
     "passport-google-oauth": "^1.0.0",
     "pg": "^6.1.2",
     "portscanner": "^2.1.1",
-    "sequelize": "^3.30.2"
+    "sequelize": "^3.30.2",
+    "sequelize-cli": "^2.7.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.24.1",
     "chai": "^3.5.0",
     "eslint": "^3.15.0",
     "eslint-plugin-import": "^2.2.0",
@@ -40,9 +43,11 @@
     "nodemon": "^1.11.0"
   },
   "scripts": {
-    "debug": "nodemon --inspect --require babel-core/register --require babel-polyfill src/index.js",
-    "start-mon": "nodemon --require babel-core/register --require babel-polyfill src/index.js",
-    "start": "node --require babel-core/register --require babel-polyfill src/index.js",
+    "build": "./node_modules/.bin/babel src --out-dir lib --source-maps --quiet",
+    "debug": "NODE_ENV=local nodemon --inspect --require babel-core/register --require babel-polyfill local.js",
+    "deploy-production": "printf 'building...' && yarn build && if [ -e api.zip ]; then rm -f api.zip; fi && printf 'compressing...' && zip -qr api * && printf 'uploading...' && aws lambda update-function-code --function-name aura_data_api_prod --zip-file fileb://api.zip",
+    "db-init": "./node_modules/.bin/sequelize db:migrate",
+    "local": "NODE_ENV=local nodemon --watch local.js --watch src --watch .babelrc --watch .sequelizerc --watch config.js --watch package.json local.js",
     "test": "jest --config jest-config.json"
   }
 }

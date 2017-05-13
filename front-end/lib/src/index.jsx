@@ -1,4 +1,5 @@
 import App from './App'
+import { apiUrl } from 'config'
 import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
@@ -11,7 +12,7 @@ import createHistory from 'history/createBrowserHistory'
 import thunk from 'redux-thunk';
 
 const history = createHistory()
-const networkInterface = createNetworkInterface({ uri: 'https://qa-tool.pibrain.io/graphql' })
+const networkInterface = createNetworkInterface({ uri: `${apiUrl}/graphql` })
 
 const apollo_client = new ApolloClient({
   networkInterface
@@ -36,7 +37,9 @@ networkInterface.use([{
       req.options.headers = {};
     }
 
-    const token = store.getState().login.serverNonce
+    const state = store.getState()
+    console.log(JSON.stringify({ login: state.login }, null, 2))
+    const token = state.login.serverNonce
     req.options.headers.authorization = token ? `Bearer ${token}` : null;
     next();
   }

@@ -1,23 +1,27 @@
-export default () => [`type RequestDatum {
+export default () => [`
+  type RequestDatum {
 
     id: Int!
 
-    updatedAt(newUpdatedAt: DateTime): DateTime!
+    updatedAt: DateTime!
 
-    parsed_request(updatedRequest: String): String
+    parsed_request: String
 
-    method(updatedMethod: String): String
+    method: String
 
-    data(updatedData: JSON): JSON
+    data: JSON
 
-    form(updatedForm: JSON): JSON
+    form: JSON
 
-    commandEx1(updatedCommandEx1: String): String!
+    commandExs: [String!]
 
-    commandEx2(updatedCommandEx2: String): String!
+    validated: Boolean
 
-    validated(updatedValidation: Boolean): Boolean
+    foundAt: String
 
-    found_at: String
+    notes: String
 
-  }`]
+    tags: String
+
+  }`
+]

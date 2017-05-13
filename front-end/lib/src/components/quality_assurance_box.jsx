@@ -27,8 +27,11 @@ export default class QualityAssuranceBox extends React.Component {
     this.updateData = this.updateData.bind(this)
     this.updateForm = this.updateForm.bind(this)
     this.updateMethod = this.updateMethod.bind(this)
+    this.updateFoundAt = this.updateFoundAt.bind(this)
     this.updateCommandEx1 = this.updateCommandEx1.bind(this)
     this.updateCommandEx2 = this.updateCommandEx2.bind(this)
+    this.updateNotes = this.updateNotes.bind(this)
+    this.updateTags = this.updateTags.bind(this)
   }
   componentWillMount() {
     // this.props.setUp()
@@ -82,10 +85,14 @@ export default class QualityAssuranceBox extends React.Component {
       return
     }
     if(!nextProps.CurrentRecord.loading && nextProps.isNewRecord) {
-      let { id, parsed_request, method, data, form, found_at, commandEx1, commandEx2 } = nextProps.CurrentRecord.firstNonValidatedRecord
+      if (!nextProps.CurrentRecord.firstNonValidatedRecord) {
+        console.log(new Error('No Record Found'))
+        this.props.CurrentRecord.refetch()
+      }
+      let { id, parsed_request, method, data, form, foundAt, commandEx1, commandEx2, notes, tags } = nextProps.CurrentRecord.firstNonValidatedRecord || {}
       this.props.toggleNewRecord()
-      this.props.updateIntermediate( id, parsed_request, found_at, method, JSON.parse(data), JSON.parse(form), commandEx1, commandEx2) 
-      window.open(found_at, '_blank', 'location=0')
+      this.props.updateIntermediate({ id, parsed_request, foundAt, method, data, form, commandEx1, commandEx2, notes, tags })
+      window.open(foundAt, '_blank', 'location=0')
     }
   }
 
@@ -93,53 +100,67 @@ export default class QualityAssuranceBox extends React.Component {
     return true
   }
 
-  updateParsedRequest(target) {
-    let newParsedRequestValue = target.value
+  updateParsedRequest({ value }) {
     let intermediateRecord = this.props.intermediateRecord
-    this.props.updateIntermediate(
-        intermediateRecord.id,
-        newParsedRequestValue,
-    )
+    this.props.updateIntermediate({
+      id: intermediateRecord.id,
+      request: value,
+    })
   }
 
-  updateMethod(target) {
+  updateMethod({ value }) {
     let newParsedRequestValue = target.value
     let intermediateRecord = this.props.intermediateRecord
-    this.props.updateIntermediate(
-      intermediateRecord.id,
-      intermediateRecord.request,
-      null,
-      target.value
-    )
+    this.props.updateIntermediate({
+      id: intermediateRecord.id,
+      request: intermediateRecord.request,
+      method: target.value
+    })
   }
 
-  updateCommandEx1(target) {
-    let newParsedRequestValue = target.value
+  updateFoundAt({ value }) {
     let intermediateRecord = this.props.intermediateRecord
-    this.props.updateIntermediate(
-        intermediateRecord.id,
-        intermediateRecord.request,
-        null,
-        null,
-        null,
-        null,
-        target.value
-    )
+    this.props.updateIntermediate({
+      id: intermediateRecord.id,
+      request: intermediateRecord.request,
+      foundAt: value,
+    })
   }
 
-  updateCommandEx2(target) {
-    let newParsedRequestValue = target.value
+  updateNotes({ value }) {
+    const { intermediateRecord } = this.props
+    this.props.updateIntermediate({
+      id: intermediateRecord.id,
+      request: intermediateRecord.request,
+      notes: value,
+    })
+  }
+
+  updateTags({ value }) {
+    const { intermediateRecord } = this.props
+    this.props.updateIntermediate({
+      id: intermediateRecord.id,
+      request: intermediateRecord.parsed_request,
+      tags: value,
+    })
+  }
+
+  updateCommandEx1({ value }) {
     let intermediateRecord = this.props.intermediateRecord
-    this.props.updateIntermediate(
-        intermediateRecord.id,
-        intermediateRecord.request,
-        null,
-        null,
-        null,
-        null,
-        null,
-        target.value
-    )
+    this.props.updateIntermediate({
+      id: intermediateRecord.id,
+      request: intermediateRecord.request,
+      commandEx1: value,
+    })
+  }
+
+  updateCommandEx2({ value }) {
+    let intermediateRecord = this.props.intermediateRecord
+    this.props.updateIntermediate({
+      id: intermediateRecord.id,
+      request: intermediateRecord.request,
+      commandEx2: value,
+    })
   }
 
   defineRequestBox() {
@@ -149,12 +170,18 @@ export default class QualityAssuranceBox extends React.Component {
       <RestRequestBox
         onRequestChange={this.updateParsedRequest}
         onMethodChange={this.updateMethod}
+        onNotesChange={this.updateNotes}
+        onTagsChange={this.updateTags}
+        onFoundAtChange={this.updateFoundAt}
         onCommandEx1Change={this.updateCommandEx1}
         onCommandEx2Change={this.updateCommandEx2}
         methodValue={ intermediateRecord.method }
         requestValue={ intermediateRecord.request }
+        foundAtValue={ intermediateRecord.foundAt }
         commandEx1Value={ intermediateRecord.commandEx1 }
         commandEx2Value={ intermediateRecord.commandEx2 }
+        notes={ intermediateRecord.notes }
+        tags={ intermediateRecord.tags }
         disabled={ inValidation } 
         style={ restRequestBoxStyle }
       />
@@ -168,7 +195,7 @@ export default class QualityAssuranceBox extends React.Component {
 
     data[key] = update
 
-    this.props.updateIntermediate( intermediateRecord.id, intermediateRecord.request, null, null, data )
+    this.props.updateIntermediate({ id: intermediateRecord.id, parsed_request: intermediateRecord.request, data })
   }
 
   updateForm(target, key) {
@@ -178,7 +205,7 @@ export default class QualityAssuranceBox extends React.Component {
 
     form[key] = update
 
-    this.props.updateIntermediate( intermediateRecord.id, intermediateRecord.request, null, null, null, form )
+    this.props.updateIntermediate({ id: intermediateRecord.id, parsed_request: intermediateRecord.request, form })
   }
 
   addDataField() {
@@ -187,7 +214,7 @@ export default class QualityAssuranceBox extends React.Component {
       ...intermediateRecord.data,
       [`place-holder-${uuid()}`]: ''
     }
-    this.props.updateIntermediate( intermediateRecord.id, intermediateRecord.request, null, null, updatedData, null )
+    this.props.updateIntermediate({ id: intermediateRecord.id, parsed_request: intermediateRecord.request, data: updatedData })
   }
 
   addFormField() {
@@ -196,7 +223,7 @@ export default class QualityAssuranceBox extends React.Component {
       ...intermediateRecord.form,
       [`place-holder-${uuid()}`]: ''
     }
-    this.props.updateIntermediate( intermediateRecord.id, intermediateRecord.request, null, null, null, updatedForm )
+    this.props.updateIntermediate({ id: intermediateRecord.id, parsed_request: intermediateRecord.request, form: updatedForm })
   }
 
   setUpComponents() {

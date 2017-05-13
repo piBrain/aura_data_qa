@@ -1,33 +1,52 @@
-import db from '../../sequelize/models/db_connection'
 import { merge  } from 'lodash'
 import GraphQLJSON from 'graphql-type-json'
 import { GraphQLDateTime } from 'graphql-iso-date'
 
-async function authHandler(context, callback, callback_args=undefined) {
-  const session = await db.Session.findOne({ where: { nonce: context.token } })
-  if( session == null ) { return }
-  debugger;
-  const user = await db.User.findOne({ where: { id: session.user_id } })
-  if ( typeof user === "undefined" || user == null) { return }
-  return callback(callback_args)
-}
+import db from '../../sequelize/models/db_connection'
+
+import authHandler from './authHandler'
+import prioritizeDomain from './prioritizeDomain'
+
 
 const update = (_, args, context) => {
-  const executeUpdate = ({ id, newUpdatedAt=(new Date()), updatedRequest, updatedData, updatedForm, updatedMethod, updatedValidation, updatedCommandEx1, updatedCommandEx2}) => {
-      return db.RequestDatum.update({
-        updated_at: newUpdatedAt,
-        parsed_request: updatedRequest,
-        data: updatedData,
-        form: updatedForm,
-        method: updatedMethod,
-        commandEx1: updatedCommandEx1,
-        commandEx2: updatedCommandEx2,
-        validated: updatedValidation,
-      }, { where: { id: id } })
-    }
+  const executeUpdate = ({
+    id,
+    newUpdatedAt = (new Date()),
+    updatedRequest,
+    updatedData,
+    updatedForm,
+    updatedMethod,
+    updatedValidation,
+    newCommandExs,
+    updatedFoundAt,
+    updatedTags,
+    updatedNotes,
+  }) => {
+    return db.RequestDatum.update({
+      updated_at: newUpdatedAt,
+      parsed_request: updatedRequest,
+      data: updatedData,
+      form: updatedForm,
+      found_at: updatedFoundAt,
+      method: updatedMethod,
+      validated: updatedValidation,
+      tags: updatedTags,
+      notes: updatedNotes,
+    }, { where: { id: id } }
+    ).then(requestDatumInstance =>
+      requestDatumInstance.addCommandExs(newCommandExs)
+    )
+  }
   authHandler(context, executeUpdate, args)
 }
+
 const single_record_query = (_, { id }) => {
+const requestDatumMutations = {
+  Mutation: {
+    mutateRequestDatum: update,
+  }
+}
+
   return db.RequestDatum.findById(id)
 }
 
@@ -36,10 +55,15 @@ const records_by_range_query = (_, { id, range }) => {
 }
 
 const first_non_validated_record = (_, args, context) => {
+  console.log('someone asked for a record')
   const executeQuery = () => {
+    console.log('gonna look for a record')
     return db.RequestDatum
       .findOne({ 
-        where: { validated: false  },
+        where: {
+          prioritized: true,
+          validated: false,
+        },
         order: [ db.Sequelize.fn( 'RANDOM' ) ]
       })
   }
@@ -49,6 +73,7 @@ const first_non_validated_record = (_, args, context) => {
 const requestDatumMutations = {
   Mutation: {
     mutateRequestDatum: update,
+    prioritizeDomain,
   }
 }
 
@@ -63,6 +88,7 @@ const requestDatumQueries = {
 const requestDatum = {
   RequestDatum: {
     id: ({id}) => (id),
+    foundAt: ({ found_at }) => (found_at),
   }
 }
 

@@ -21,7 +21,7 @@
     "react-apollo": "^0.13.0",
     "react-bootstrap": "^0.30.7",
     "react-dom": "^15.4.2",
-    "react-google-login": "^2.8.5",
+    "react-google-login": "^2.8.7",
     "react-modal": "^1.7.1",
     "react-redux": "^5.0.2",
     "react-router": "^4.0.0",
@@ -29,6 +29,7 @@
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
     "sinon": "^1.17.7",
+    "supervisor": "^0.12.0",
     "uuid": "^3.0.1"
   },
   "devDependencies": {
@@ -42,15 +43,23 @@
     "babel-preset-react-native": "^1.9.1",
     "chai": "^3.5.0",
     "enzyme": "^2.7.0",
+    "http-server": "^0.9.0",
     "local-web-server": "^1.2.6",
     "mocha": "^3.2.0",
     "webpack": "^1.14.0"
   },
   "scripts": {
-    "test": "mocha",
-    "db:create-model": "sequelize model:create --models-path=./lib/db/models --migrations-path=./lib/db/migrations",
-    "db:migrate": "sequelize db:migrate --models-path=./lib/db/models --migrations-path=./lib/db/migrations --config=./lib/db/config/config.json",
-    "db:migrate:undo": "sequelize db:migrate:undo --models-path=./lib/db/models --migrations-path=./lib/db/migrations --config=./lib/db/config/config.json",
-    "create-model": "sequelize model:create --models-path=./lib/db/models --migrations-path=./lib/db/migrations"
+    "hello": "echo hello",
+    "build-local": "NODE_ENV=local ./node_modules/.bin/webpack --watch",
+    "build-production": "NODE_ENV=production ./node_modules/.bin/webpack",
+    "create-model": "./node_module/.bin/sequelize model:create --models-path=./lib/db/models --migrations-path=./lib/db/migrations",
+    "deploy-production": "yarn run build-production && yarn run publish",
+    "db:create-model": "./node_module/.bin/sequelize model:create --models-path=./lib/db/models --migrations-path=./lib/db/migrations",
+    "db:migrate": "./node_module/.bin/sequelize db:migrate --models-path=./lib/db/models --migrations-path=./lib/db/migrations --config=./lib/db/config/config.json",
+    "db:migrate:undo": "./node_module/.bin/sequelize db:migrate:undo --models-path=./lib/db/models --migrations-path=./lib/db/migrations --config=./lib/db/config/config.json",
+    "publish": "for filename in bundle.js bundle.js.map index.html theme.css; do aws s3 cp $filename s3://pibrain.qa.front-end; done;",
+    "local": "trap 'kill -- -$$' SIGINT SIGTERM EXIT; ( yarn build-local ) & ./node_modules/.bin/nodemon --watch package.json --watch bundle.js --watch bundle.js.map --exec 'yarn run serve:local'",
+    "serve:local": "./node_modules/.bin/http-server -p 8000 --",
+    "test": "mocha"
   }
 }

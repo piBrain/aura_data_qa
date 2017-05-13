@@ -35,7 +35,9 @@ const updateIntermediate = ( action, state ) => {
       form: (action.form || state.intermediateRecord.form),
       commandEx1: (action.commandEx1 || state.intermediateRecord.commandEx1),
       commandEx2: (action.commandEx2 || state.intermediateRecord.commandEx2),
-      found_at: (action.found_at || state.intermediateRecord.found_at),
+      foundAt: (action.foundAt || state.intermediateRecord.foundAt),
+      notes: (action.notes || state.intermediateRecord.notes),
+      tags: (action.tags || state.intermediateRecord.tags),
     }
   }
 }
@@ -53,7 +55,7 @@ const acceptLogin = ( action, state ) => {
 
 const rejectLogin = ( action, state ) => {
   return { ...state, serverNonce: '', loading: false }
-} 
+}
 
 const loggingIn = ( _, state ) => {
   return { ...state, loading: true }
@@ -72,7 +74,9 @@ const initial_state = {
     form: {},
     commandEx1: '',
     commandEx2: '',
-    found_at: null,
+    foundAt: '',
+    notes: '',
+    tags: '',
   },
   loading: false,
 }
