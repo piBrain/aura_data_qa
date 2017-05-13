@@ -8,7 +8,6 @@ async function authHandler(context, callback, callback_args) {
     console.log('no session found - skipping execution')
     return
   }
-  // debugger;
   const user = await db.User.findOne({ where: { id: session && session.user_id } })
   if ( typeof user === "undefined" || user == null) {
     console.log('no user found - skipping execution')

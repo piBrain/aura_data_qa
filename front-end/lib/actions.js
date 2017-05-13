@@ -33,15 +33,11 @@ export const updateIntermediate = ({
   data=null,
   form=null,
   commandEx1=null,
-  commandEx2=null
-} = {
-  foundAt: null,
-  method: null,
-  data: null,
-  commandEx1: null,
-  commandEx2: null
+  commandEx2=null,
+  notes=null,
+  tags=null
 }) => {
-  return { type: UPDATE_INTERMEDIATE, id, request, foundAt, method, data, form, commandEx1, commandEx2  }
+  return { type: UPDATE_INTERMEDIATE, id, request, foundAt, method, data, form, commandEx1, commandEx2, notes, tags  }
 }
 
 export const rejectInvalid = () => ( { type: REJECT_INVALID } )
@@ -59,11 +55,6 @@ export const rejectLogin = (err) => ({type: REJECT_LOGIN, err})
 
 
 export const requestNonceFromServer = ( googleResponse, route ) => {
-  console.log('requestNonceFromServer')
-  console.log(JSON.stringify({
-    googleResponse,
-    route,
-  }, null, 2))
   return ( dispatch ) => {
     fetch( `${apiUrl}/auth`, { method: 'POST', headers: { 'google-access-token': googleResponse.tokenId } } )
     .then(( response ) => {

@@ -91,7 +91,7 @@ const fetchNonValidatedRecord = graphql(currentRecord, {
 const persistChangesAndValidate = graphql(updateRecord, {
   props: ({ mutate }) => ({
     persistChangesAndValidate: ( { id, request, method, data, form, commandEx1, commandEx2, foundAt, notes, tags } ) => {
-      return mutate({ 
+      return mutate({
         variables: { id,
                      updatedRequest: request,
                      updatedValidation: true,

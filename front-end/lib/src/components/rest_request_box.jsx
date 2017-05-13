@@ -9,6 +9,8 @@ export default class RestRequestBox extends React.Component {
     this.handleMethodChange = this.handleMethodChange.bind(this);
     this.handleCommandEx1Change =  this.handleCommandEx1Change.bind(this);
     this.handleCommandEx2Change = this.handleCommandEx2Change.bind(this);
+    this.handleNotesChange = this.handleNotesChange.bind(this)
+    this.handleTagsChange = this.handleTagsChange.bind(this)
   }
 
   handleRequestChange(e) {
@@ -88,7 +90,7 @@ export default class RestRequestBox extends React.Component {
           <ControlLabel style={ this.props.style.controlLabel }>Tags:</ControlLabel>
           <FormControl
             type='text'
-            value={this.props.notes}
+            value={this.props.tags}
             disabled={this.props.disabled}
             onChange={this.handleTagsChange}
           />

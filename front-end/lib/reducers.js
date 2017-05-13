@@ -49,17 +49,13 @@ const openAcceptModal = ( _, state ) => ({ ...state, is_accept_open: true })
 const closeAcceptModal = ( _, state ) => ({ ...state, is_accept_open: false  })
 
 const acceptLogin = ( action, state ) => {
-  console.log('acceptLogin')
-  console.log(JSON.stringify(action, null, 2))
   document.cookie = `piBrainQASessionNonce=${action.token};`
   return { ...state, serverNonce: action.token, loading: false }
 }
 
 const rejectLogin = ( action, state ) => {
-  console.log('rejectLogin')
-  console.log(JSON.stringify(action, null, 2))
   return { ...state, serverNonce: '', loading: false }
-} 
+}
 
 const loggingIn = ( _, state ) => {
   return { ...state, loading: true }

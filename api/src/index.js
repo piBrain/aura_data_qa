@@ -1,5 +1,3 @@
-console.log('index.js')
-
 const { NODE_ENV } = process.env
 import config from '../config'
 config()
@@ -20,9 +18,6 @@ import base64url from 'base64url'
 
 const qaApp = express()
 
-// console.log(typeDefs)
-// console.log(requestDatumResolvers)
-
 const schema = makeExecutableSchema({typeDefs: typeDefs, resolvers: requestDatumResolvers})
 
 const authClient = new ( new GoogleAuth ).OAuth2(process.env.GOOGLE_CLIENT_ID)
@@ -38,18 +33,13 @@ qaApp.use(
   '/graphql',
   bodyParser.json(),
   graphqlExpress((request) => {
-    console.log('haylowe')
-    console.log(`request ${request ? 'exists' : 'doesn\'t exist'}`)
-    console.log(JSON.stringify({
-      headers: request.headers,
-    }, null, 2))
     const token = request.headers
       && request.headers.authorization
       && request.headers.authorization.split(' ')[1]
       || undefined
     return {
       context: { token },
-      schema, 
+      schema,
     }
   }),
 )

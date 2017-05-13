@@ -18,7 +18,7 @@ const executePrioritizeDomain = ({ domain }) => {
     console.log('SEQUELIZE RESPONSE', something)
     return `${something[0]} request samples prioritized for domain "${domain}"`;
   }).catch((err) => {
-    console.log(`SEQUELIZE ERROR ${err}`)
+    console.error(`SEQUELIZE ERROR ${err}`)
   })
 }
 
