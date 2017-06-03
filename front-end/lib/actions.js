@@ -19,6 +19,8 @@ export const ACCEPT_LOGIN = 'ACCEPT_LOGIN'
 
 export const REJECT_LOGIN = 'REJECT_LOGIN'
 
+export const RESET_INTERMEDIATE = 'RESET_INTERMEDIATE'
+
 export const LOGGING_IN = 'LOGGING_IN'
 
 export const toggleValidation = () => ( { type: TOGGLE_MODE } )
@@ -27,7 +29,7 @@ export const toggleNewRecord = () => ( { type: TOGGLE_NEW_RECORD } )
 
 export const updateIntermediate = ({
   id,
-  request,
+  parsed_request,
   foundAt=null,
   method=null,
   data=null,
@@ -37,8 +39,10 @@ export const updateIntermediate = ({
   notes=null,
   tags=null
 }) => {
-  return { type: UPDATE_INTERMEDIATE, id, request, foundAt, method, data, form, commandEx1, commandEx2, notes, tags  }
+  return { type: UPDATE_INTERMEDIATE, id, parsed_request, foundAt, method, data, form, commandEx1, commandEx2, notes, tags  }
 }
+
+export const resetIntermediate = () => ( { type: RESET_INTERMEDIATE } )
 
 export const rejectInvalid = () => ( { type: REJECT_INVALID } )
 
