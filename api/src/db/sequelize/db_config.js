@@ -2,11 +2,7 @@ var config = require('../../../config')
 config()
 
 module.exports = {
-  "development": {
-    "url": process.env.DATABASE_URL,
-    "dialect": "postgres",
-  },
-  local: {
+  "local": {
     "url": process.env.DATABASE_URL,
     dialect: 'postgres',
   },

@@ -21,6 +21,7 @@ const update = (_, args, context) => {
     updatedFoundAt,
     updatedTags,
     updatedNotes,
+    userId
   }) => {
     return db.RequestDatum.update({
       updated_at: newUpdatedAt,
@@ -32,9 +33,20 @@ const update = (_, args, context) => {
       validated: updatedValidation,
       tags: updatedTags,
       notes: updatedNotes,
-    }, { where: { id: id } }
-    ).then(requestDatumInstance =>
-      requestDatumInstance.addCommandExs(newCommandExs)
+      user_id: userId,
+    }, { where: { id: id }, returning: true  }
+    ).then((updateResults) =>
+      {
+        let requestDatumInstance = updateResults[1][0]
+        let validCommands = newCommandExs.filter((val) => { return (val && true) || false })
+        validCommands.forEach((val) => {
+          db.CommandExample.upsert({
+            user_id: userId,
+            request_datum_id: requestDatumInstance.id,
+            text: val
+          })
+        })
+      }
     )
   }
   authHandler(context, executeUpdate, args)
@@ -59,7 +71,7 @@ const first_non_validated_record = (_, args, context) => {
   const executeQuery = () => {
     console.log('gonna look for a record')
     return db.RequestDatum
-      .findOne({ 
+      .findOne({
         where: {
           prioritized: true,
           validated: false,

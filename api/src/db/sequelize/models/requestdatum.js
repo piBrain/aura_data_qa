@@ -19,12 +19,15 @@ module.exports = function(sequelize, DataTypes) {
     prioritized: DataTypes.BOOLEAN,
     notes: DataTypes.TEXT,
     tags: DataTypes.STRING,
+    user_id: DataTypes.INTEGER
   }, {
     classMethods: {
       associate: function(models) {
         // associations can be defined here
         RequestDatum.hasMany(models.CommandExample)
       }
+    },
+    instanceMethods: {
     }
   });
   return RequestDatum;

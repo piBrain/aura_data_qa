@@ -110,8 +110,6 @@ export function initDB() {
 }
 
 
-// initServer(qaApp,db)
-
 const qaServer = awsServerlessExpress.createServer(qaApp)
 
 export const lambdaHandler = async (event, context) => {
