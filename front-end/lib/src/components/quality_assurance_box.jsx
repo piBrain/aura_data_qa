@@ -19,7 +19,6 @@ import {
 export default class QualityAssuranceBox extends React.Component {
   constructor(props) {
     super(props)
-    this.componentWillMount = this.componentWillMount.bind(this)
     this.acceptModal = this.acceptModal.bind(this)
     this.defineRequestBox = this.defineRequestBox.bind(this)
     this.acceptValidation = this.acceptValidation.bind(this)
@@ -32,9 +31,6 @@ export default class QualityAssuranceBox extends React.Component {
     this.updateCommandEx2 = this.updateCommandEx2.bind(this)
     this.updateNotes = this.updateNotes.bind(this)
     this.updateTags = this.updateTags.bind(this)
-  }
-  componentWillMount() {
-    // this.props.setUp()
   }
   render() {
     return(this.setUpComponents());
@@ -91,7 +87,8 @@ export default class QualityAssuranceBox extends React.Component {
       }
       let { id, parsed_request, method, data, form, foundAt, commandEx1, commandEx2, notes, tags } = nextProps.CurrentRecord.firstNonValidatedRecord || {}
       this.props.toggleNewRecord()
-      this.props.updateIntermediate({ id, parsed_request, foundAt, method, data, form, commandEx1, commandEx2, notes, tags })
+      this.props.resetIntermediate()
+      this.props.updateIntermediate({ id, parsed_request, foundAt, method, data: JSON.parse(data), form: JSON.parse(form), commandEx1: "", commandEx2: "", notes, tags })
       window.open(foundAt, '_blank', 'location=0')
     }
   }
@@ -104,7 +101,7 @@ export default class QualityAssuranceBox extends React.Component {
     let intermediateRecord = this.props.intermediateRecord
     this.props.updateIntermediate({
       id: intermediateRecord.id,
-      request: value,
+      parsed_request: value,
     })
   }
 
@@ -113,7 +110,7 @@ export default class QualityAssuranceBox extends React.Component {
     let intermediateRecord = this.props.intermediateRecord
     this.props.updateIntermediate({
       id: intermediateRecord.id,
-      request: intermediateRecord.request,
+      parsed_request: intermediateRecord.request,
       method: target.value
     })
   }
@@ -122,7 +119,7 @@ export default class QualityAssuranceBox extends React.Component {
     let intermediateRecord = this.props.intermediateRecord
     this.props.updateIntermediate({
       id: intermediateRecord.id,
-      request: intermediateRecord.request,
+      parsed_request: intermediateRecord.request,
       foundAt: value,
     })
   }
@@ -131,7 +128,7 @@ export default class QualityAssuranceBox extends React.Component {
     const { intermediateRecord } = this.props
     this.props.updateIntermediate({
       id: intermediateRecord.id,
-      request: intermediateRecord.request,
+      parsed_request: intermediateRecord.request,
       notes: value,
     })
   }
@@ -140,7 +137,7 @@ export default class QualityAssuranceBox extends React.Component {
     const { intermediateRecord } = this.props
     this.props.updateIntermediate({
       id: intermediateRecord.id,
-      request: intermediateRecord.parsed_request,
+      parsed_request: intermediateRecord.request,
       tags: value,
     })
   }
@@ -149,7 +146,7 @@ export default class QualityAssuranceBox extends React.Component {
     let intermediateRecord = this.props.intermediateRecord
     this.props.updateIntermediate({
       id: intermediateRecord.id,
-      request: intermediateRecord.request,
+      parsed_request: intermediateRecord.request,
       commandEx1: value,
     })
   }
@@ -158,7 +155,7 @@ export default class QualityAssuranceBox extends React.Component {
     let intermediateRecord = this.props.intermediateRecord
     this.props.updateIntermediate({
       id: intermediateRecord.id,
-      request: intermediateRecord.request,
+      parsed_request: intermediateRecord.request,
       commandEx2: value,
     })
   }

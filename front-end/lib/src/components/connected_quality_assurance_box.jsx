@@ -7,7 +7,7 @@ import { gql, graphql, compose } from 'react-apollo'
 import { bindActionCreators } from 'redux'
 
 
-import { rejectInvalid, openAcceptModal, closeAcceptModal, toggleNewRecord, updateIntermediate } from '../../actions'
+import { rejectInvalid, openAcceptModal, closeAcceptModal, toggleNewRecord, updateIntermediate, resetIntermediate } from '../../actions'
 
 import { push } from 'react-router-redux';
 
@@ -76,6 +76,7 @@ const mapDispatchToProps = (dispatch) => {
       closeAcceptModal,
       toggleNewRecord,
       updateIntermediate,
+      resetIntermediate,
       pushHistory: push
     },
     dispatch

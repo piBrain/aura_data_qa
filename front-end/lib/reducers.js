@@ -29,15 +29,33 @@ const updateIntermediate = ( action, state ) => {
     ...state,
     intermediateRecord: {
       id: action.id,
-      request: action.request,
-      method: (action.method || state.intermediateRecord.method),
+      request: action.parsed_request,
+      method: action.method == "" ? "" : (action.method || state.intermediateRecord.method),
       data: (action.data || state.intermediateRecord.data),
       form: (action.form || state.intermediateRecord.form),
-      commandEx1: (action.commandEx1 || state.intermediateRecord.commandEx1),
-      commandEx2: (action.commandEx2 || state.intermediateRecord.commandEx2),
-      foundAt: (action.foundAt || state.intermediateRecord.foundAt),
-      notes: (action.notes || state.intermediateRecord.notes),
-      tags: (action.tags || state.intermediateRecord.tags),
+      commandEx1: action.commandEx1 == "" ? "" : (action.commandEx1 || state.intermediateRecord.commandEx1),
+      commandEx2: action.commandEx2 == "" ? "" : (action.commandEx2 || state.intermediateRecord.commandEx2),
+      foundAt: action.foundAt == "" ? "" : (action.foundAt || state.intermediateRecord.foundAt),
+      notes: action.notes == "" ? "" : (action.notes || state.intermediateRecord.notes),
+      tags: action.tags == "" ? "" : (action.tags || state.intermediateRecord.tags),
+    }
+  }
+}
+
+const resetIntermediate = ( _, state ) => {
+  return {
+    ...state,
+    intermediateRecord: {
+      id: null,
+      request: '',
+      method: '',
+      data: {},
+      form: {},
+      commandEx1: '',
+      commandEx2: '',
+      foundAt: '',
+      notes: '',
+      tags: '',
     }
   }
 }
@@ -98,6 +116,7 @@ export const qa_reducer = ( state = initial_state, action ) => {
     CLOSE_ACCEPT_MODAL: closeAcceptModal,
     TOGGLE_NEW_RECORD: toggleNewRecord,
     UPDATE_INTERMEDIATE: updateIntermediate,
+    RESET_INTERMEDIATE: resetIntermediate,
   }
   if(typeof qa_lookup[action.type] == 'undefined') {
     return state

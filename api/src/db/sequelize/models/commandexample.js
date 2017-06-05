@@ -1,7 +1,7 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var CommandExample = sequelize.define('CommandExample', {
-    id: { 
+    id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,

@@ -23,5 +23,7 @@ export default () => [`
 
     tags: String
 
+    user_id: Int
+
   }`
 ]

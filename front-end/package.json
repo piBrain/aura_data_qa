@@ -14,6 +14,7 @@
     "graphql": "^0.8.2",
     "graphql-tag": "^1.3.0",
     "jsdom": "^9.9.1",
+    "nodemon": "^1.11.0",
     "pg": "^6.1.2",
     "pg-hstore": "^2.3.2",
     "react": "^15.4.2",
@@ -49,7 +50,6 @@
     "webpack": "^1.14.0"
   },
   "scripts": {
-    "hello": "echo hello",
     "build-local": "NODE_ENV=local ./node_modules/.bin/webpack --watch",
     "build-production": "NODE_ENV=production ./node_modules/.bin/webpack",
     "create-model": "./node_module/.bin/sequelize model:create --models-path=./lib/db/models --migrations-path=./lib/db/migrations",

@@ -14,6 +14,7 @@ export default () => [
         newCommandExs: [String!],
         updatedNotes: String,
         updatedTags: String,
+        userId: Int,
     ): RequestDatum
     prioritizeDomain( domain: String): String
   }`,
