@@ -7,7 +7,9 @@ export const ACCEPT_VALID = 'ACCEPT_VALID'
 
 export const TOGGLE_NEW_RECORD = 'TOGGLE_NEW_RECORD'
 
-export const UPDATE_INTERMEDIATE = 'UPDATE_INTERMEDIATE'
+export const UPDATE_REQUEST = 'UPDATE_REQUEST'
+
+export const UPDATE_SITE = 'UPDATE_SITE'
 
 export const REJECT_INVALID = 'REJECT_INVALID'
 
@@ -17,9 +19,15 @@ export const CLOSE_ACCEPT_MODAL = 'CLOSE_ACCEPT_MODAL'
 
 export const ACCEPT_LOGIN = 'ACCEPT_LOGIN'
 
+export const ADD_REQUEST = 'ADD_REQUEST'
+
+export const REMOVE_REQUEST = 'REMOVE_REQUEST'
+
 export const REJECT_LOGIN = 'REJECT_LOGIN'
 
-export const RESET_INTERMEDIATE = 'RESET_INTERMEDIATE'
+export const RESET = 'RESET'
+
+export const SKIP = 'SKIP'
 
 export const LOGGING_IN = 'LOGGING_IN'
 
@@ -27,9 +35,9 @@ export const toggleValidation = () => ( { type: TOGGLE_MODE } )
 
 export const toggleNewRecord = () => ( { type: TOGGLE_NEW_RECORD } )
 
-export const updateIntermediate = ({
-  id,
-  parsed_request,
+export const updateRequest = ({
+  requestId,
+  foundRequest,
   foundAt=null,
   method=null,
   data=null,
@@ -39,10 +47,24 @@ export const updateIntermediate = ({
   notes=null,
   tags=null
 }) => {
-  return { type: UPDATE_INTERMEDIATE, id, parsed_request, foundAt, method, data, form, commandEx1, commandEx2, notes, tags  }
+  return { type: UPDATE_REQUEST, requestId, foundRequest, foundAt, method, data, form, commandEx1, commandEx2, notes, tags  }
 }
 
-export const resetIntermediate = () => ( { type: RESET_INTERMEDIATE } )
+export const updateSite = ({
+  id,
+  url,
+  requestIds
+}) => {
+  return { type: UPDATE_SITE, id, url, requestIds }
+}
+
+export const reset = () => ( { type: RESET } )
+
+export const skip = () => ( { type: SKIP } )
+
+export const addRequest = () => ( { type: ADD_REQUEST } )
+
+export const removeRequest = (requestId) => ( { type: REMOVE_REQUEST, requestId } )
 
 export const rejectInvalid = () => ( { type: REJECT_INVALID } )
 
@@ -73,5 +95,4 @@ export const requestNonceFromServer = ( googleResponse, route ) => {
     })
   }
 }
-  
 

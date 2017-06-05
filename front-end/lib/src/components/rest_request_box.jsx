@@ -21,9 +21,6 @@ export default class RestRequestBox extends React.Component {
     this.props.onMethodChange(e.target)
   }
 
-  handleFoundAtChange(e) {
-    this.props.onFoundAtChange(e.target)
-  }
 
   handleNotesChange({ target }) {
     this.props.onNotesChange(target)
@@ -45,13 +42,6 @@ export default class RestRequestBox extends React.Component {
     return (
       <form style={ this.props.style.topLevelForm }>
         <FormGroup className='restDataEntry'>
-          <ControlLabel style={ this.props.style.controlLabel }>Doc Address:</ControlLabel>
-          <FormControl
-            type='text'
-            value={this.props.foundAtValue}
-            disabled={this.props.disabled}
-            onChange={this.handleFoundAtChange}
-          />
           <ControlLabel style={ this.props.style.controlLabel }>Method:</ControlLabel>
           <FormControl
             type='text'

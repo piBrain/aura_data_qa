@@ -8,29 +8,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      created_at: {
-        type: Sequelize.TIME
-      },
-      updated_at: {
-        type: Sequelize.TIME
-      },
-      parsed_request: {
-        type: Sequelize.STRING
-      },
-      method: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      data: {
-        type: Sequelize.JSON,
-        allowNull: false,
-        defaultValue: {}
-      },
-      form: {
-        type: Sequelize.JSON,
-        allowNull: false,
-        defaultValue: {}
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -39,20 +16,13 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
-      found_at: {
+      method: {
         type: Sequelize.STRING,
-        allowNull: false,
-        defaultValue: ''
+        allowNull: false
       },
-      validated: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false,
-        defaultValue: false
-      },
-      prioritized: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false,
-        defaultValue: false,
+      request: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
       notes: {
         type: Sequelize.TEXT,
@@ -63,6 +33,14 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
         defaultValue: '',
+      },
+      data: {
+        type: Sequelize.JSON,
+        allowNull: true,
+      },
+      form: {
+        type: Sequelize.JSON,
+        allowNull: true,
       },
     });
   },

@@ -6,12 +6,11 @@ import authHandler from './authHandler'
 const executePrioritizeDomain = ({ domain }) => {
   console.log('executePrioritizeDomain')
   const domainLike = { $like: `%${domain}%` }
-  return db.RequestDatum.update(
-    { prioritized: true },
+  return db.Site.update(
+    { priority_domain: true },
     { where:
       { $or: [
-        { found_at: domainLike },
-        { parsed_request: domainLike },
+        { url: domainLike },
       ]},
     },
   ).then((something) => {

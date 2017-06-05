@@ -1,13 +1,18 @@
 import {
-  TOGGLE_VALIDATION,
-  REJECT_INVALID,
-  OPEN_ACCEPT_MODAL,
-  CLOSE_ACCEPT_MODAL,
-  TOGGLE_NEW_RECORD,
-  UPDATE_INTERMEDIATE,
   ACCEPT_LOGIN,
-  REJECT_LOGIN,
+  ADD_REQUEST,
+  CLOSE_ACCEPT_MODAL,
   LOGGING_IN,
+  OPEN_ACCEPT_MODAL,
+  REJECT_INVALID,
+  REJECT_LOGIN,
+  REMOVE_REQUEST,
+  RESET,
+  SKIP,
+  TOGGLE_NEW_RECORD,
+  TOGGLE_VALIDATION,
+  UPDATE_REQUEST,
+  UPDATE_SITE,
 } from './actions.js';
 
 import assign from 'assign-deep';
@@ -24,39 +29,91 @@ const reject = ( _, state ) => {
   }
 }
 
-const updateIntermediate = ( action, state ) => {
+const updateRequest = ( action, state ) => {
   return {
     ...state,
-    intermediateRecord: {
-      id: action.id,
-      request: action.parsed_request,
-      method: action.method == "" ? "" : (action.method || state.intermediateRecord.method),
-      data: (action.data || state.intermediateRecord.data),
-      form: (action.form || state.intermediateRecord.form),
-      commandEx1: action.commandEx1 == "" ? "" : (action.commandEx1 || state.intermediateRecord.commandEx1),
-      commandEx2: action.commandEx2 == "" ? "" : (action.commandEx2 || state.intermediateRecord.commandEx2),
-      foundAt: action.foundAt == "" ? "" : (action.foundAt || state.intermediateRecord.foundAt),
-      notes: action.notes == "" ? "" : (action.notes || state.intermediateRecord.notes),
-      tags: action.tags == "" ? "" : (action.tags || state.intermediateRecord.tags),
+    requests: {
+      ...state.requests,
+      [action['requestId']]: {
+        commandEx1: action.commandEx1 == "" ? "" : (action.commandEx1 || state.requests[action.requestId].commandEx1),
+        commandEx2: action.commandEx2 == "" ? "" : (action.commandEx2 || state.requests[action.requestId].commandEx2),
+        data: (action.data || state.requests[action.requestId].data),
+        form: (action.form || state.requests[action.requestId].form),
+        foundAt: action.foundAt == "" ? "" : (action.foundAt || state.requests[action.requestId].foundAt),
+        method: action.method == "" ? "" : (action.method || state.requests[action.requestId].method),
+        notes: action.notes == "" ? "" : (action.notes || state.requests[action.requestId].notes),
+        request: action.foundRequest == "" ? "" : (action.foundRequest || state.requests[action.requestId].foundRequest),
+        tags: action.tags == "" ? "" : (action.tags || state.requests[action.requestId].tags),
+      }
     }
   }
 }
 
-const resetIntermediate = ( _, state ) => {
+const skip = ( _, state ) => {
+  return toggleNewRecord( null, reset( null, state ) )
+}
+
+const reset = ( _, state ) => {
   return {
     ...state,
-    intermediateRecord: {
+    site: {
       id: null,
-      request: '',
-      method: '',
-      data: {},
-      form: {},
-      commandEx1: '',
-      commandEx2: '',
-      foundAt: '',
-      notes: '',
-      tags: '',
+      requestIds: [],
+      url: '',
+    },
+    requests: {
+
     }
+  }
+}
+
+const updateSite = ( action, state ) => {
+  return {
+    ...state,
+    site: {
+      id: action.id == null ? null : (action.id || state.site.id),
+      requestIds: action.requestIds == [] ? [] : (action.requestIds || state.site.requestIds),
+      url: action.url == "" ? "" : (action.url || state.url),
+    }
+  }
+}
+
+const addRequest = ( action, state ) => {
+  let newRequestId = state.site.requestIds.length == 0 ? 0 : Math.max(...state.site.requestIds) + 1
+  return {
+    ...state,
+    site: {
+      ...state.site,
+      requestIds: state.site.requestIds.slice(0).concat([newRequestId])
+    },
+    requests: {
+      ...state.requests,
+      [newRequestId]: {
+        commandEx1: '',
+        commandEx2: '',
+        data: {},
+        form: {},
+        foundAt: '',
+        method: '',
+        notes: '',
+        request: '',
+        tags: '',
+      },
+    },
+  }
+}
+
+const removeRequest = ( action, state ) => {
+  let updatedRequests = assign({}, state.requests)
+  let updatedSiteRequestIds = state.site.requestIds.filter((val) => val != action.requestId)
+  delete updatedRequests[action.requestId]
+  return {
+    ...state,
+    site: {
+      ...state.site,
+      requestIds: updatedSiteRequestIds,
+    },
+    updatedRequests
   }
 }
 
@@ -80,23 +137,18 @@ const loggingIn = ( _, state ) => {
 }
 
 const initial_state = {
-  in_validation: true,
   completed_count: 0,
-  is_accept_open: false,
+  in_validation: true,
   isNewRecord: true,
-  intermediateRecord: {
-    id: null,
-    request: '',
-    method: '',
-    data: {},
-    form: {},
-    commandEx1: '',
-    commandEx2: '',
-    foundAt: '',
-    notes: '',
-    tags: '',
-  },
+  is_accept_open: false,
   loading: false,
+  requests: {
+  },
+  site: {
+    id: null,
+    url: '',
+    requestIds: []
+  },
 }
 
 
@@ -105,9 +157,6 @@ const loginInitialState = {
   loading: false
 }
 
-
-
-
 export const qa_reducer = ( state = initial_state, action ) => {
   let qa_lookup = {
     TOGGLE_VALIDATION: toggleValidation,
@@ -115,8 +164,12 @@ export const qa_reducer = ( state = initial_state, action ) => {
     OPEN_ACCEPT_MODAL: openAcceptModal,
     CLOSE_ACCEPT_MODAL: closeAcceptModal,
     TOGGLE_NEW_RECORD: toggleNewRecord,
-    UPDATE_INTERMEDIATE: updateIntermediate,
-    RESET_INTERMEDIATE: resetIntermediate,
+    ADD_REQUEST: addRequest,
+    REMOVE_REQUEST: removeRequest,
+    UPDATE_REQUEST: updateRequest,
+    UPDATE_SITE: updateSite,
+    SKIP: skip,
+    RESET: reset,
   }
   if(typeof qa_lookup[action.type] == 'undefined') {
     return state

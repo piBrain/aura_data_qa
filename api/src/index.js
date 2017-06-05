@@ -51,9 +51,6 @@ qaApp.use(
 )
 
 async function authenticationHandler( req, res ) {
-  console.log('authenticationHandler')
-  console.log(JSON.stringify({
-  }, null, 2))
    async function googleSuccessCallback(e, login) {
      console.log('googleSuccessCallback')
     if(e) {

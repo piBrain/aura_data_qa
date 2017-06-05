@@ -7,6 +7,7 @@
   "author": "piBrain, Inc.",
   "license": "MIT",
   "dependencies": {
+    "aws-sdk": "^2.62.0",
     "aws-serverless-express": "^2.2.0",
     "babel-core": "^6.22.1",
     "babel-eslint": "^7.1.1",
@@ -48,6 +49,7 @@
     "deploy-production": "printf 'building...' && yarn build && if [ -e api.zip ]; then rm -f api.zip; fi && printf 'compressing...' && zip -qr api * && printf 'uploading...' && aws lambda update-function-code --function-name aura_data_api_prod --zip-file fileb://api.zip",
     "db-init": "./node_modules/.bin/sequelize db:migrate",
     "local": "NODE_ENV=local nodemon --watch local.js --watch src --watch .babelrc --watch .sequelizerc --watch config.js --watch package.json local.js",
-    "test": "jest --config jest-config.json"
+    "test": "jest --config jest-config.json",
+    "import-debug": "NODE_ENV=local nodemon --inspect --require babel-core/register --require babel-polyfill ./src/load_data.js"
   }
 }

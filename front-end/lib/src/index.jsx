@@ -38,7 +38,6 @@ networkInterface.use([{
     }
 
     const state = store.getState()
-    console.log(JSON.stringify({ login: state.login }, null, 2))
     const token = state.login.serverNonce
     req.options.headers.authorization = token ? `Bearer ${token}` : null;
     next();

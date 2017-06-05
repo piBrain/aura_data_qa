@@ -1,18 +1,18 @@
 'use strict';
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    return queryInterface.createTable('CommandExamples', {
+    return queryInterface.createTable('RequestDatumCommandExamples', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
-      user_id: {
-        type: Sequelize.INTEGER,
+      command_example_id: {
+        type: Sequelize.INTEGER
       },
-      text: {
-        type: Sequelize.STRING,
+      request_datum_id: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -21,11 +21,10 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
-      },
+      }
     });
   },
   down: function(queryInterface, Sequelize) {
-    return queryInterface.dropTable('CommandExamples');
+    return queryInterface.dropTable('RequestDatumCommandExamples');
   }
 };
-

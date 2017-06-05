@@ -8,57 +8,44 @@ import authHandler from './authHandler'
 import prioritizeDomain from './prioritizeDomain'
 
 
-const update = (_, args, context) => {
+const createSiteRequestData = (_, args, context) => {
   const executeUpdate = ({
-    id,
-    newUpdatedAt = (new Date()),
-    updatedRequest,
-    updatedData,
-    updatedForm,
-    updatedMethod,
-    updatedValidation,
-    newCommandExs,
-    updatedFoundAt,
-    updatedTags,
-    updatedNotes,
+    siteId,
+    requestData,
     userId
   }) => {
-    return db.RequestDatum.update({
-      updated_at: newUpdatedAt,
-      parsed_request: updatedRequest,
-      data: updatedData,
-      form: updatedForm,
-      found_at: updatedFoundAt,
-      method: updatedMethod,
-      validated: updatedValidation,
-      tags: updatedTags,
-      notes: updatedNotes,
-      user_id: userId,
-    }, { where: { id: id }, returning: true  }
-    ).then((updateResults) =>
-      {
-        let requestDatumInstance = updateResults[1][0]
+    Object.values(requestData).filter((requestDatum) => { return (requestDatum.request != "" && requestDatum.method != "" ) }).forEach((requestDatum) => {
+      return createRequestDatum(requestDatum, userId, siteId).then((requestDatumRecord) => {
+        let requestDatumId = requestDatumRecord.id
+        db.SiteRequestData.create({site_id: siteId, request_datum_id: requestDatumId}, { returning: true })
+        let newCommandExs = [requestDatum.commandEx1, requestDatum.commandEx2]
         let validCommands = newCommandExs.filter((val) => { return (val && true) || false })
-        validCommands.forEach((val) => {
-          db.CommandExample.upsert({
-            user_id: userId,
-            request_datum_id: requestDatumInstance.id,
-            text: val
-          })
-        })
-      }
-    )
+        attachCommandExamplesToRequestDatum(validCommands, userId, requestDatumId)
+      })
+    })
   }
   authHandler(context, executeUpdate, args)
 }
 
-const single_record_query = (_, { id }) => {
-const requestDatumMutations = {
-  Mutation: {
-    mutateRequestDatum: update,
-  }
+const createRequestDatum = (requestDatum, userId, siteId) => {
+  return db.RequestDatum.create({
+    updatedAt: (new Date()).toISOString(), request: requestDatum.request, data: requestDatum.data, form: requestDatum.form,
+    method: requestDatum.method, tags: requestDatum.tags, notes: requestDatum.notes
+  }, { returning: true })
 }
 
+const attachCommandExamplesToRequestDatum = (validCommands, userId, requestDatumId) => {
+  validCommands.forEach((val) => {
+    db.CommandExample.create({
+      user_id: userId,
+      text: val
+    }, { returning: true }).then((example) => {
+      db.RequestDatumCommandExample.create({ command_example_id: example.id, request_datum_id: requestDatumId })
+    })
+  })
+}
+
+const single_record_query = (_, { id }) => {
   return db.RequestDatum.findById(id)
 }
 
@@ -70,10 +57,10 @@ const first_non_validated_record = (_, args, context) => {
   console.log('someone asked for a record')
   const executeQuery = () => {
     console.log('gonna look for a record')
-    return db.RequestDatum
+    return db.Site
       .findOne({
         where: {
-          prioritized: true,
+          priority_domain: true,
           validated: false,
         },
         order: [ db.Sequelize.fn( 'RANDOM' ) ]
@@ -84,7 +71,7 @@ const first_non_validated_record = (_, args, context) => {
 
 const requestDatumMutations = {
   Mutation: {
-    mutateRequestDatum: update,
+    createSiteRequestData,
     prioritizeDomain,
   }
 }
@@ -104,9 +91,15 @@ const requestDatum = {
   }
 }
 
+const siteRequestData = {
+  SiteRequestData: {
+    id: ({id}) => (id),
+  }
+}
+
 const scalarResolvers = {
   JSON: GraphQLJSON,
   DateTime: GraphQLDateTime
 }
 
-export default merge({}, requestDatumMutations, requestDatumQueries, requestDatum, scalarResolvers)
+export default merge({}, requestDatumMutations, requestDatumQueries, requestDatum, scalarResolvers, siteRequestData)
