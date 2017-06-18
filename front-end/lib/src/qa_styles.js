@@ -10,6 +10,32 @@ export const restRequestBoxStyle = {
   },
 }
 
+export const docBox = {
+  width: '80%',
+  marginLeft: '7.5%',
+  marginBottom: '-4.5%'
+}
+
+export const siteStyle = {
+  controlLabel: {
+
+  }
+}
+
+export const requestListStyle = {
+  listElement: {
+    height: '100%',
+    float: 'left',
+    width: '100%',
+    marginBottom: '38%',
+  },
+  listContainer: {
+    height: '40%',
+    overflowY: 'scroll',
+    postion: 'absolute',
+  },
+}
+
 export const dataBoxStyle = {
   topLevelWell: {
     width: '80%',
@@ -21,13 +47,25 @@ export const dataBoxStyle = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-around',
-  }
+  },
+  listElement: {
+    height: '100%',
+    float: 'left',
+    width: '100%',
+    marginBottom: '3%',
+  },
+  listContainer: {
+    height: '40%',
+    overflowY: 'scroll',
+    postion: 'absolute',
+  },
 }
 
 export const validationButtonStyle = {
   topLevelButton: {
     width: '80%',
     marginLeft: '7.5%',
+    height: '10%',
     flex: '0.1 0 0',
   },
 }
@@ -66,26 +104,24 @@ export const wrapperStyle = {
 }
 
 
-export const addFieldStyle = (props, order) => {
-  let visibility = props.in_validation ? 'hidden' : 'visible'
+export const addFieldStyle = (order) => {
     return  {
       topLevelButton: {
         margin: '0',
         flex: '0.95 0 0',
         fontSize: '0.65em',
         order,
-        visibility,
       },
     }
 }
 
-export const addFieldWrapperStyle ={
+export const addFieldWrapperStyle = (height) => ({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'space-around',
   width: '80%',
-  height: '5%',
+  height,
   marginLeft: '7.5%',
   marginBottom: '1%',
-} 
+})

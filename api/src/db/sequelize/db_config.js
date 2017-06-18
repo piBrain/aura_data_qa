@@ -5,6 +5,15 @@ module.exports = {
   "local": {
     "url": process.env.DATABASE_URL,
     dialect: 'postgres',
+    pool: {
+      min: 0,
+      max: 5,
+      idle: 10000,
+      acquire: 10000,
+    },
+    retry: {
+      max: 3,
+    }
   },
   "test": {
     "username": "aura",

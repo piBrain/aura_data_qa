@@ -1,22 +1,12 @@
-import RequestDatum from './request_datum'
+import SiteRequestData from './site_request_data'
 
 export default () => [
   `type Mutation {
-    mutateRequestDatum(
-        id: Int!,
-        newUpdatedAt: DateTime,
-        updatedRequest: String!
-        updatedData: JSON,
-        updatedForm: JSON,
-        updatedMethod: String,
-        updatedValidation: Boolean!,
-        updatedFoundAt: String,
-        newCommandExs: [String!],
-        updatedNotes: String,
-        updatedTags: String,
-        userId: Int,
-    ): RequestDatum
+    createSiteRequestData(
+      siteId: Int!,
+      requestData: JSON!
+    ): SiteRequestData
     prioritizeDomain( domain: String): String
   }`,
-  RequestDatum
+  SiteRequestData
 ]

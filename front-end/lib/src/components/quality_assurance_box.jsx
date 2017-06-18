@@ -1,36 +1,29 @@
 import React from 'react'
 import Modal from 'react-modal'
-import RestRequestBox from './rest_request_box' 
-import DataBox from './data_box'
 import ValidationButton from './validation_button'
-import uuid from 'uuid'
 import {
   restRequestBoxStyle,
-  dataBoxStyle,
   validationButtonStyle,
   qaEntryStyle,
   webpageBoxStyle,
   wrapperStyle,
   addFieldStyle,
-  addFieldWrapperStyle
+  addFieldWrapperStyle,
+  requestListStyle
 } from '../qa_styles'
+
+import RequestInformation from './request_information'
+import Site from './site'
 
 
 export default class QualityAssuranceBox extends React.Component {
   constructor(props) {
     super(props)
     this.acceptModal = this.acceptModal.bind(this)
-    this.defineRequestBox = this.defineRequestBox.bind(this)
     this.acceptValidation = this.acceptValidation.bind(this)
-    this.updateParsedRequest = this.updateParsedRequest.bind(this)
-    this.updateData = this.updateData.bind(this)
-    this.updateForm = this.updateForm.bind(this)
-    this.updateMethod = this.updateMethod.bind(this)
-    this.updateFoundAt = this.updateFoundAt.bind(this)
-    this.updateCommandEx1 = this.updateCommandEx1.bind(this)
-    this.updateCommandEx2 = this.updateCommandEx2.bind(this)
-    this.updateNotes = this.updateNotes.bind(this)
-    this.updateTags = this.updateTags.bind(this)
+    this.defineRequests = this.defineRequests.bind(this)
+    this.skipSite = this.skipSite.bind(this)
+    this.updateURL = this.updateURL.bind(this)
   }
   render() {
     return(this.setUpComponents());
@@ -38,7 +31,7 @@ export default class QualityAssuranceBox extends React.Component {
 
 
   acceptValidation() {
-    this.props.persistChangesAndValidate(this.props.intermediateRecord)
+    this.props.persistChangesAndValidate({ siteId: this.props.site.id, requestData: this.props.requests })
       .then(() => {
         this.props.CurrentRecord.refetch()
           .then(() => {
@@ -85,161 +78,67 @@ export default class QualityAssuranceBox extends React.Component {
         console.log(new Error('No Record Found'))
         this.props.CurrentRecord.refetch()
       }
-      let { id, parsed_request, method, data, form, foundAt, commandEx1, commandEx2, notes, tags } = nextProps.CurrentRecord.firstNonValidatedRecord || {}
+      let { id, url } = nextProps.CurrentRecord.firstNonValidatedRecord || { id: -1, url: '' }
       this.props.toggleNewRecord()
-      this.props.resetIntermediate()
-      this.props.updateIntermediate({ id, parsed_request, foundAt, method, data: JSON.parse(data), form: JSON.parse(form), commandEx1: "", commandEx2: "", notes, tags })
-      window.open(foundAt, '_blank', 'location=0')
+      this.props.reset()
+      this.props.updateSite({ id , url, requestIds: []})
+      window.open(url, '_blank', 'location=0')
     }
+  }
+
+  defineRequests() {
+    return this.props.site.requestIds.map((requestId) => {
+     return  (
+      <RequestInformation
+        key={requestId}
+        totalRequests={this.props.site.requestIds.length}
+        request={this.props.requests[requestId]}
+        site={this.props.site}
+        updateRequest={this.props.updateRequest}
+        inValidation={this.props.in_validation}
+        requestId={requestId}
+      />
+     )
+    })
   }
 
   shouldComponentUpdate(nextProps, _) {
     return true
   }
 
-  updateParsedRequest({ value }) {
-    let intermediateRecord = this.props.intermediateRecord
-    this.props.updateIntermediate({
-      id: intermediateRecord.id,
-      parsed_request: value,
+  updateURL(value) {
+    let { id, url, requestIds } = this.props.site
+    this.props.updateSite({
+      id,
+      value,
+      requestIds,
     })
   }
 
-  updateMethod({ value }) {
-    let newParsedRequestValue = target.value
-    let intermediateRecord = this.props.intermediateRecord
-    this.props.updateIntermediate({
-      id: intermediateRecord.id,
-      parsed_request: intermediateRecord.request,
-      method: target.value
-    })
-  }
-
-  updateFoundAt({ value }) {
-    let intermediateRecord = this.props.intermediateRecord
-    this.props.updateIntermediate({
-      id: intermediateRecord.id,
-      parsed_request: intermediateRecord.request,
-      foundAt: value,
-    })
-  }
-
-  updateNotes({ value }) {
-    const { intermediateRecord } = this.props
-    this.props.updateIntermediate({
-      id: intermediateRecord.id,
-      parsed_request: intermediateRecord.request,
-      notes: value,
-    })
-  }
-
-  updateTags({ value }) {
-    const { intermediateRecord } = this.props
-    this.props.updateIntermediate({
-      id: intermediateRecord.id,
-      parsed_request: intermediateRecord.request,
-      tags: value,
-    })
-  }
-
-  updateCommandEx1({ value }) {
-    let intermediateRecord = this.props.intermediateRecord
-    this.props.updateIntermediate({
-      id: intermediateRecord.id,
-      parsed_request: intermediateRecord.request,
-      commandEx1: value,
-    })
-  }
-
-  updateCommandEx2({ value }) {
-    let intermediateRecord = this.props.intermediateRecord
-    this.props.updateIntermediate({
-      id: intermediateRecord.id,
-      parsed_request: intermediateRecord.request,
-      commandEx2: value,
-    })
-  }
-
-  defineRequestBox() {
-    let inValidation = this.props.in_validation
-    let intermediateRecord = this.props.intermediateRecord
-    return (
-      <RestRequestBox
-        onRequestChange={this.updateParsedRequest}
-        onMethodChange={this.updateMethod}
-        onNotesChange={this.updateNotes}
-        onTagsChange={this.updateTags}
-        onFoundAtChange={this.updateFoundAt}
-        onCommandEx1Change={this.updateCommandEx1}
-        onCommandEx2Change={this.updateCommandEx2}
-        methodValue={ intermediateRecord.method }
-        requestValue={ intermediateRecord.request }
-        foundAtValue={ intermediateRecord.foundAt }
-        commandEx1Value={ intermediateRecord.commandEx1 }
-        commandEx2Value={ intermediateRecord.commandEx2 }
-        notes={ intermediateRecord.notes }
-        tags={ intermediateRecord.tags }
-        disabled={ inValidation } 
-        style={ restRequestBoxStyle }
-      />
-    )
-  }
-
-  updateData(target, key) {
-    let intermediateRecord = this.props.intermediateRecord
-    let update = target.value
-    let data = { ...intermediateRecord.data }
-
-    data[key] = update
-
-    this.props.updateIntermediate({ id: intermediateRecord.id, parsed_request: intermediateRecord.request, data })
-  }
-
-  updateForm(target, key) {
-    let intermediateRecord = this.props.intermediateRecord
-    let update = target.value
-    let form = { ...intermediateRecord.form }
-
-    form[key] = update
-
-    this.props.updateIntermediate({ id: intermediateRecord.id, parsed_request: intermediateRecord.request, form })
-  }
-
-  addDataField() {
-    let intermediateRecord = this.props.intermediateRecord
-    let updatedData = {
-      ...intermediateRecord.data,
-      [`place-holder-${uuid()}`]: ''
-    }
-    this.props.updateIntermediate({ id: intermediateRecord.id, parsed_request: intermediateRecord.request, data: updatedData })
-  }
-
-  addFormField() {
-    let intermediateRecord = this.props.intermediateRecord
-    let updatedForm = {
-      ...intermediateRecord.form,
-      [`place-holder-${uuid()}`]: ''
-    }
-    this.props.updateIntermediate({ id: intermediateRecord.id, parsed_request: intermediateRecord.request, form: updatedForm })
+  skipSite() {
+    this.props.CurrentRecord.refetch()
+    this.props.skip()
   }
 
   setUpComponents() {
     if(this.props.CurrentRecord.loading) { return (<div>{'LOADING'}</div>) }
-    let intermediateRecord = this.props.intermediateRecord
     let inValidation = this.props.in_validation
     return (
       <div style={wrapperStyle}>
         <div style={ qaEntryStyle.topLevelDiv } className='qaBox'>
           { this.acceptModal() }
-          { this.defineRequestBox() }
-          <DataBox onChange={this.updateData} labelName='Request Inputs' disabled={inValidation} dataField={intermediateRecord.data} style={ dataBoxStyle }/>
-          <DataBox onChange={this.updateForm} labelName='Request Form Fields' disabled={inValidation} dataField={intermediateRecord.form} style={ dataBoxStyle }/>
-          <div style={addFieldWrapperStyle} >
-            <ValidationButton buttonText='Add Data Field' style={ addFieldStyle(this.props) } onClick={ this.addDataField.bind(this) }/>
-            <ValidationButton buttonText='Add Form Field' style={ addFieldStyle(this.props) } onClick={ this.addFormField.bind(this) }/>
+          <Site disabled={this.props.in_validation} updateURL={this.updateURL} url={this.props.site.url}/>
+          <div style={ requestListStyle.listContainer }>
+            { this.defineRequests() }
           </div>
-          <ValidationButton buttonText='Valid' style={ validationButtonStyle } onClick={ this.props.openAcceptModal }/>
-          <ValidationButton buttonText='Invalid' style={ validationButtonStyle } onClick={ this.props.rejectInvalid }/>
+          <div style={{...addFieldWrapperStyle('7.5%'), marginBottom: '-4.5%'}}>
+            <ValidationButton buttonText='+' style={ addFieldStyle(0) } onClick={ this.props.addRequest }/>
+            <ValidationButton buttonText='Skip' style={ addFieldStyle(1) } onClick={ this.skipSite }/>
+          </div>
+          <div style={addFieldWrapperStyle('7.5%')} >
+            <ValidationButton buttonText='Valid' style={ addFieldStyle(0) } onClick={ this.props.openAcceptModal }/>
+            <ValidationButton buttonText='Invalid' style={ addFieldStyle(1) } onClick={ this.props.rejectInvalid }/>
+          </div>
         </div>
       </div>
     );

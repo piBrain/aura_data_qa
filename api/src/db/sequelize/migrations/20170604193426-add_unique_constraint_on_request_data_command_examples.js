@@ -3,13 +3,13 @@
 module.exports = {
   up: function (queryInterface, Sequelize) {
     return queryInterface.sequelize.query(
-      'ALTER TABLE "CommandExamples" ADD UNIQUE (request_datum_id, text)'
+      'ALTER TABLE "RequestDatumCommandExamples" ADD UNIQUE (request_datum_id, command_example_id)'
     );
   },
 
   down: function (queryInterface, Sequelize) {
     return queryInterface.sequelize.query(
-      'ALTER TABLE "CommandExamples" DROP CONSTRAINT "CommandExamples_request_datum_id_text_key"'
+      'ALTER TABLE "RequestDatumCommandExamples" DROP CONSTRAINT "RequestDatumCommandExamples_request_datum_id_command_exampl_key"'
     );
   }
 };

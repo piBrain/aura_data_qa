@@ -6,22 +6,15 @@ import { gql, graphql, compose } from 'react-apollo'
 
 import { bindActionCreators } from 'redux'
 
-
-import { rejectInvalid, openAcceptModal, closeAcceptModal, toggleNewRecord, updateIntermediate, resetIntermediate } from '../../actions'
+import { rejectInvalid, openAcceptModal, closeAcceptModal, toggleNewRecord, updateRequest, updateSite, skip, reset, addRequest, removeRequest } from '../../actions'
 
 import { push } from 'react-router-redux';
 
 const currentRecord = gql`
   query CurrentRecord {
     firstNonValidatedRecord {
-       id
-       parsed_request
-       method
-       data
-       form
-       foundAt
-       notes
-       tags
+       id,
+       url
     }
   }
 
@@ -29,29 +22,13 @@ const currentRecord = gql`
 
 const updateRecord = gql`
   mutation UpdateRecord(
-    $id: Int!,
-    $updatedRequest: String!,
-    $updatedMethod: String,
-    $updatedValidation: Boolean!,
-    $updatedForm: JSON,
-    $updatedData: JSON,
-    $updatedFoundAt: String,
-    $newCommandExs: [String!],
-    $updatedNotes: String,
-    $updatedTags: String,
+    $siteId: Int!,
+    $requestData: JSON!
   )
     {
-      mutateRequestDatum(
-        id: $id,
-        updatedValidation: $updatedValidation,
-        updatedData: $updatedData,
-        updatedForm: $updatedForm,
-        updatedMethod: $updatedMethod,
-        updatedFoundAt: $updatedFoundAt,
-        newCommandExs: $newCommandExs,
-        updatedRequest: $updatedRequest,
-        updatedNotes: $updatedNotes,
-        updatedTags: $updatedTags,
+      createSiteRequestData(
+        siteId: $siteId,
+        requestData: $requestData
       ) {
           id
         }
@@ -63,7 +40,8 @@ const mapStateToProps = (state) => {
     completed_count: state.qa.completed_count,
     is_accept_open: state.qa.is_accept_open,
     isNewRecord: state.qa.isNewRecord,
-    intermediateRecord: state.qa.intermediateRecord,
+    site: state.qa.site,
+    requests: state.qa.requests,
     token: state.login.serverNonce ? true : false
   }
 }
@@ -75,14 +53,17 @@ const mapDispatchToProps = (dispatch) => {
       openAcceptModal,
       closeAcceptModal,
       toggleNewRecord,
-      updateIntermediate,
-      resetIntermediate,
+      updateRequest,
+      updateSite,
+      addRequest,
+      removeRequest,
+      reset,
+      skip,
       pushHistory: push
     },
     dispatch
   )
 }
-
 
 const fetchNonValidatedRecord = graphql(currentRecord, {
   fetchPolicy: 'network-only',
@@ -91,18 +72,11 @@ const fetchNonValidatedRecord = graphql(currentRecord, {
 
 const persistChangesAndValidate = graphql(updateRecord, {
   props: ({ mutate }) => ({
-    persistChangesAndValidate: ( { id, request, method, data, form, commandEx1, commandEx2, foundAt, notes, tags } ) => {
+    persistChangesAndValidate: ( { siteId, requestData } ) => {
       return mutate({
-        variables: { id,
-                     updatedRequest: request,
-                     updatedValidation: true,
-                     updatedForm: form,
-                     updatedData: data,
-                     updatedMethod: method,
-                     updatedFoundAt: foundAt,
-                     newCommandExs: [commandEx1, commandEx2],
-                     newNotes: notes,
-                     newTags: tags,
+        variables: {
+          siteId,
+          requestData
         },
       })
     }

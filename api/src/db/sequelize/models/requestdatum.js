@@ -4,22 +4,16 @@ module.exports = function(sequelize, DataTypes) {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
-      unique: true,
       primaryKey: true,
       allowNull: false,
     },
-    created_at: DataTypes.TIME,
-    updated_at: DataTypes.TIME,
-    parsed_request: DataTypes.STRING,
+    createdAt: DataTypes.TIME,
+    updatedAt: DataTypes.TIME,
+    request: DataTypes.STRING,
     method: DataTypes.STRING,
     data: DataTypes.JSON,
     form: DataTypes.JSON,
-    validated: DataTypes.BOOLEAN,
-    found_at: DataTypes.STRING,
-    prioritized: DataTypes.BOOLEAN,
     notes: DataTypes.TEXT,
-    tags: DataTypes.STRING,
-    user_id: DataTypes.INTEGER
   }, {
     classMethods: {
       associate: function(models) {
