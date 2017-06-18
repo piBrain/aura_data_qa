@@ -15,8 +15,6 @@ export default () => [`
 
     commandExs: [String!]
 
-    validated: Boolean
-
     foundAt: String
 
     notes: String

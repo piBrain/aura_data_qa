@@ -9,32 +9,31 @@ import authHandler from './authHandler'
 import prioritizeDomain from './prioritizeDomain'
 
 
-const createSiteRequestData = (_, args, context) => {
+const createSiteRequestData = async (_, args, context) => {
   const executeUpdate = ({
     siteId,
     requestData,
     userId
   }) => {
     const nonEmptyRequestData = Object.values(requestData)
-      .filter((requestDatum) => (requestDatum.request !== "" && requestDatum.method !== ""))
-    return map(nonEmptyRequestData,
-      (requestDatum) => {
-        createRequestDatum(requestDatum, userId, siteId)
-          .then(async (requestDatumRecord) => {
-            let requestDatumId = requestDatumRecord.id
-            await db.SiteRequestData.create({site_id: siteId, request_datum_id: requestDatumId}, { returning: true })
-            let newCommandExs = [requestDatum.commandEx1, requestDatum.commandEx2]
-            let validCommands = newCommandExs.filter((val) => (val))
-            return attachCommandExamplesToRequestDatum(validCommands, userId, requestDatumId)
-              .then(() =>
-                db.Site.update(
-                  { validated: true },
-                  { where: { id: siteId } },
-                )
-              )
-          })
-      },
-    )
+      .filter((requestDatum) => (requestDatum.request !== '' && requestDatum.method !== ''))
+
+    const processNonEmptyRequestDatum = async (requestDatum) => {
+      const requestDatumRecord = await createRequestDatum(requestDatum, userId, siteId)
+      const requestDatumId = requestDatumRecord.id
+      await db.SiteRequestData.create({site_id: siteId, request_datum_id: requestDatumId}, { returning: true })
+      const newCommandExs = [requestDatum.commandEx1, requestDatum.commandEx2]
+      const validCommands = newCommandExs.filter((val) => (val))
+      await attachCommandExamplesToRequestDatum(validCommands, userId, requestDatumId)
+      return db.Site.update(
+        { validated: true },
+        { where: { id: siteId } },
+      )
+    }
+
+    await map(nonEmptyRequestData, processNonEmptyRequestDatum)
+
+    return true;
   }
   return authHandler(context, executeUpdate, args)
 }
