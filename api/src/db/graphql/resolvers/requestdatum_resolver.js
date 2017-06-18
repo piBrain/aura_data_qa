@@ -9,8 +9,8 @@ import authHandler from './authHandler'
 import prioritizeDomain from './prioritizeDomain'
 
 
-const createSiteRequestData = async (_, args, context) => {
-  const executeUpdate = ({
+const createSiteRequestData = (_, args, context) => {
+  const executeUpdate = async ({
     siteId,
     requestData,
     userId
