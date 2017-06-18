@@ -30,7 +30,7 @@ const updateRecord = gql`
         siteId: $siteId,
         requestData: $requestData
       ) {
-          id
+          siteId
         }
     }
 `

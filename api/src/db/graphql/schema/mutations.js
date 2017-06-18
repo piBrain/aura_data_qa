@@ -5,7 +5,7 @@ export default () => [
     createSiteRequestData(
       siteId: Int!,
       requestData: JSON!
-    ): Boolean
+    ): SiteRequestData
     prioritizeDomain( domain: String): String
   }`,
   SiteRequestData
