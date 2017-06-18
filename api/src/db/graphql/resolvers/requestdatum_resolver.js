@@ -20,7 +20,12 @@ const createSiteRequestData = (_, args, context) => {
         db.SiteRequestData.create({site_id: siteId, request_datum_id: requestDatumId}, { returning: true })
         let newCommandExs = [requestDatum.commandEx1, requestDatum.commandEx2]
         let validCommands = newCommandExs.filter((val) => { return (val && true) || false })
-        attachCommandExamplesToRequestDatum(validCommands, userId, requestDatumId)
+        attachCommandExamplesToRequestDatum(validCommands, userId, requestDatumId).then(() => {
+          db.Site.update(
+            { validated: true },
+            { where: { id: siteId } }
+          )
+        })
       })
     })
   }
@@ -34,15 +39,15 @@ const createRequestDatum = (requestDatum, userId, siteId) => {
   }, { returning: true })
 }
 
-const attachCommandExamplesToRequestDatum = (validCommands, userId, requestDatumId) => {
-  validCommands.forEach((val) => {
-    db.CommandExample.create({
+const attachCommandExamplesToRequestDatum = async (validCommands, userId, requestDatumId) => {
+  for( let val of validCommands ) {
+    await db.CommandExample.create({
       user_id: userId,
       text: val
     }, { returning: true }).then((example) => {
       db.RequestDatumCommandExample.create({ command_example_id: example.id, request_datum_id: requestDatumId })
     })
-  })
+  }
 }
 
 const single_record_query = (_, { id }) => {
