@@ -33,7 +33,7 @@ const createSiteRequestData = (_, args, context) => {
 
     await map(nonEmptyRequestData, processNonEmptyRequestDatum)
 
-    return siteId
+    return { siteId }
   }
   return authHandler(context, executeUpdate, args)
 }
