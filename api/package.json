@@ -50,6 +50,7 @@
     "db-init": "./node_modules/.bin/sequelize db:migrate",
     "local": "NODE_ENV=local nodemon --watch local.js --watch src --watch .babelrc --watch .sequelizerc --watch config.js --watch package.json local.js",
     "test": "jest --config jest-config.json",
-    "import-debug": "NODE_ENV=local nodemon --inspect --require babel-core/register --require babel-polyfill ./src/load_data.js"
+    "import-debug": "NODE_ENV=local nodemon --inspect --require babel-core/register --require babel-polyfill ./import_data.js",
+    "import-data": "node ./import_data.js"
   }
 }
