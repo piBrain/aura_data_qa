@@ -1,3 +1,4 @@
+import { map } from 'bluebird'
 import { merge  } from 'lodash'
 import GraphQLJSON from 'graphql-type-json'
 import { GraphQLDateTime } from 'graphql-iso-date'
@@ -14,22 +15,28 @@ const createSiteRequestData = (_, args, context) => {
     requestData,
     userId
   }) => {
-    Object.values(requestData).filter((requestDatum) => { return (requestDatum.request != "" && requestDatum.method != "" ) }).forEach((requestDatum) => {
-      return createRequestDatum(requestDatum, userId, siteId).then((requestDatumRecord) => {
-        let requestDatumId = requestDatumRecord.id
-        db.SiteRequestData.create({site_id: siteId, request_datum_id: requestDatumId}, { returning: true })
-        let newCommandExs = [requestDatum.commandEx1, requestDatum.commandEx2]
-        let validCommands = newCommandExs.filter((val) => { return (val && true) || false })
-        attachCommandExamplesToRequestDatum(validCommands, userId, requestDatumId).then(() => {
-          db.Site.update(
-            { validated: true },
-            { where: { id: siteId } }
-          )
-        })
-      })
-    })
+    const nonEmptyRequestData = Object.values(requestData)
+      .filter((requestDatum) => (requestDatum.request !== "" && requestDatum.method !== ""))
+    return map(nonEmptyRequestData,
+      (requestDatum) => {
+        createRequestDatum(requestDatum, userId, siteId)
+          .then(async (requestDatumRecord) => {
+            let requestDatumId = requestDatumRecord.id
+            await db.SiteRequestData.create({site_id: siteId, request_datum_id: requestDatumId}, { returning: true })
+            let newCommandExs = [requestDatum.commandEx1, requestDatum.commandEx2]
+            let validCommands = newCommandExs.filter((val) => (val))
+            return attachCommandExamplesToRequestDatum(validCommands, userId, requestDatumId)
+              .then(() =>
+                db.Site.update(
+                  { validated: true },
+                  { where: { id: siteId } },
+                )
+              )
+          })
+      },
+    )
   }
-  authHandler(context, executeUpdate, args)
+  return authHandler(context, executeUpdate, args)
 }
 
 const createRequestDatum = (requestDatum, userId, siteId) => {
