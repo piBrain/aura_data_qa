@@ -31,8 +31,10 @@
     "passport-google-oauth": "^1.0.0",
     "pg": "^6.1.2",
     "portscanner": "^2.1.1",
+    "sendgrid": "^5.1.1",
     "sequelize": "^3.30.2",
-    "sequelize-cli": "^2.7.0"
+    "sequelize-cli": "^2.7.0",
+    "shortid": "^2.2.8"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
