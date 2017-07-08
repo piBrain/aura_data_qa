@@ -51,8 +51,8 @@ const sendMail = (mail) => {
   return configuredClient.API(request)
 }
 
-export var mailClient = { createMail, sendMail, addNewContact }
+export const mailClient = { createMail, sendMail, addNewContact }
 
-export var emailDefaults = {
+export const emailDefaults = {
   from: 'aura@pibrain.io'
 }

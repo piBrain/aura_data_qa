@@ -1,9 +1,9 @@
 import { mailClient, emailDefaults } from '../../../lib/mail_client'
 
 const executeNewsletterSignUp = async ({ url, email, firstName, lastName }) => {
-  let date = new Date()
+  const date = new Date()
   date.setHours(date.getHours()+1)
-  let resendUrl = url + `?email=${email}&firstName=${firstName}&lastName=${lastName}&expiryTime=${date}`
+  const resendUrl = url + `?email=${email}&firstName=${firstName}&lastName=${lastName}&expiryTime=${date}`
   try {
     await mailClient.sendMail(mailClient.createMail({
       from: 'content@pibrain.io',

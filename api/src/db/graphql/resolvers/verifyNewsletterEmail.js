@@ -16,17 +16,17 @@ const executeVerifyNewsletterEmail = async ({ url, timestamp, email, firstName, 
   return { err: false, response: `Thank you for verifying your email!` }
 }
 
-const handleErrArray = (err) => {
-  let errMessages = err.map((err) => err.message)
-  console.log(errMessages)
+const handleErrArray = (errs) => {
+  const errMessages = errs.map((err) => err.message)
+  console.error(errMessages)
   return { err: true, response: errMessages }
 }
 
 const handleHttpOrStandardErrors = (err) => {
   if(err.response) {
-    console.log(err.message, err.response.status, err.response.body, err.response.headers)
+    console.error(err.message, err.response.status, err.response.body, err.response.headers)
   } else {
-    console.log(err.message)
+    console.error(err.message)
   }
   return { err: true, response: err.message }
 }

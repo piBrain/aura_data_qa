@@ -17,7 +17,7 @@ import base64url from 'base64url'
 
 const qaApp = express()
 
-const schema = makeExecutableSchema({typeDefs: typeDefs, resolvers: resolvers})
+const schema = makeExecutableSchema({ typeDefs, resolvers })
 
 const authClient = new ( new GoogleAuth ).OAuth2(process.env.GOOGLE_CLIENT_ID)
 
