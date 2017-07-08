@@ -1,8 +1,6 @@
 import db from '../../sequelize/models/db_connection'
 import authHandler from './authHandler'
 
-
-
 const executePrioritizeDomain = ({ domain }) => {
   console.log('executePrioritizeDomain')
   const domainLike = { $like: `%${domain}%` }

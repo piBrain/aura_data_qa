@@ -2,7 +2,6 @@ import db from '../../sequelize/models/db_connection'
 
 
 async function authHandler(context, callback, callback_args) {
-  console.log(JSON.stringify({ context }))
   const session = await db.Session.findOne({ where: { nonce: context.token } })
   if( session == null ) {
     console.log('no session found - skipping execution')

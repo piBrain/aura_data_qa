@@ -2,12 +2,8 @@ import { map } from 'bluebird'
 import { merge  } from 'lodash'
 import GraphQLJSON from 'graphql-type-json'
 import { GraphQLDateTime } from 'graphql-iso-date'
-
 import db from '../../sequelize/models/db_connection'
-
 import authHandler from './authHandler'
-import prioritizeDomain from './prioritizeDomain'
-
 
 const createSiteRequestData = (_, args, context) => {
   const executeUpdate = async ({
@@ -83,7 +79,6 @@ const first_non_validated_record = (_, args, context) => {
 const requestDatumMutations = {
   Mutation: {
     createSiteRequestData,
-    prioritizeDomain,
   }
 }
 
