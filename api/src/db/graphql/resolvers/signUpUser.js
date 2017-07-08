@@ -25,6 +25,9 @@ const executeSignUpUser = (args) => {
     },
   ).then(async (users, newRecord) => {
     let user = users[0]
+    if(user.active) {
+      return { err: true, response: 'There is already an active user with that email.' }
+    }
     if(!newRecord) {
       user.set('activationExpiry', date)
       user.set('activationNonce', nonce)

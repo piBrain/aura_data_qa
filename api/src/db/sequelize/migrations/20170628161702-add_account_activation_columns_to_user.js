@@ -10,9 +10,11 @@ module.exports = {
     queryInterface.addColumn('Users', 'activationNonce', {
         type: Sequelize.STRING,
         allowNull: true,
+        unique: true,
     })
     queryInterface.addColumn('Users', 'activationExpiry', {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull: true
     })
   },
 
